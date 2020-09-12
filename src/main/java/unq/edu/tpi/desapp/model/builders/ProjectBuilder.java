@@ -20,4 +20,8 @@ public class ProjectBuilder {
     }
 
     //Faltan los withX - EJ withName(final String name) { }
+    public ProjectBuilder withLocation(Location givenLocation) {
+        location = givenLocation;
+        return this;
+    }
 }

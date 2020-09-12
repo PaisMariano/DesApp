@@ -9,12 +9,12 @@ public class Donation {
     private User user;
     private Project project;
 
-    public Donation(Integer amount, String comment, User user, Project project) {
+    public Donation(Integer amount, String comment, LocalDate date, User user, Project project) {
         this.amount = amount;
         this.comment = comment;
         this.user = user;
         this.project = project;
-        this.date = LocalDate.now();
+        this.date = date;
     }
 
     public Project getProject() {
