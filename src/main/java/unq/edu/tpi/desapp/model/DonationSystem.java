@@ -7,7 +7,7 @@ public class DonationSystem {
     private ArrayList<Donation> donations;
 
     public DonationSystem(ArrayList<PointsCalculatorStrategy> strategies) {
-        strategies = strategies;
+        this.strategies = strategies;
     }
 
     public void donate(Integer amount, String comment, User user, Project project) {
