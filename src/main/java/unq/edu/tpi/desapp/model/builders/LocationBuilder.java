@@ -15,4 +15,8 @@ public class LocationBuilder {
     }
 
     //Faltan los withX - EJ withName(final String name) { }
+    public LocationBuilder withPopulation(Integer givenPopulation) {
+        population = givenPopulation;
+        return this;
+    }
 }
