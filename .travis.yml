@@ -3,6 +3,9 @@ language: java
 jdk:
 - oraclejdk8
 
+before_install:
+- chmod +x gradlew
+
 dist: trusty
 
 # see https://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure

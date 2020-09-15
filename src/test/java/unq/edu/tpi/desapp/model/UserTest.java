@@ -1,7 +1,5 @@
 package unq.edu.tpi.desapp.model;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
