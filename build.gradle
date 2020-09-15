@@ -21,10 +21,10 @@ dependencies {
 	testImplementation 'junit:junit:4.12'
 //	testCompile group: 'junit', name: 'junit', version: '4.12'
 }
-
-test {
-	useJUnitPlatform()
-}
+//
+//test {
+//	useJUnitPlatform()
+//}
 
 bootJar {
 	enabled = false
