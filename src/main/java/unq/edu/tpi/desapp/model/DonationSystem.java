@@ -1,5 +1,7 @@
 package unq.edu.tpi.desapp.model;
 
+import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -11,7 +13,7 @@ public class DonationSystem {
         this.strategies = strategies;
     }
 
-    public void donate(Integer amount, String comment, User user, Project project) {
+    public void donate(Integer amount, String comment, User user, Project project) throws IntegerMustBePositive {
         donations.add(new Donation(amount, comment, LocalDate.now(), user, project));
         user.addPoints(calculatePoints(amount, user, project));
         project.addFunds(amount);
