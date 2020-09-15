@@ -17,3 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     testCompile('junit:junit:4.12')
 }
+
+bootJar {
+    enabled = false
+}
