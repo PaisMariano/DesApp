@@ -1,5 +1,7 @@
 package unq.edu.tpi.desapp.model;
 
+import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
+
 import java.time.LocalDate;
 
 public class Donation {
@@ -27,5 +29,37 @@ public class Donation {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public Integer calculatePoints() throws IntegerMustBePositive {
+        return calculateSameAmount() + calculateDouble() + calculateSecondColaboration();
+    }
+
+    public Integer calculateDouble() {
+        Integer points = 0;
+        if (project.getLocation().getPopulation() < 2000)
+            points = amount * 2;
+        return points;
+    }
+
+    public Integer calculateSameAmount() {
+        Integer points = 0;
+        if (amount > 1000)
+            points = amount;
+        return points;
+    }
+
+    public Integer calculateSecondColaboration() {
+        LocalDate aMonthAgo = LocalDate.now().minusMonths(1);
+        Integer points = 0;
+        Integer ocurrencies = 0;
+        for (Donation donation : user.getDonations()) {
+            if (donation.getDate().isAfter(aMonthAgo))
+                ocurrencies += 1;
+        }
+        if (ocurrencies >= 1)
+            points = 500;
+
+        return points;
     }
 }

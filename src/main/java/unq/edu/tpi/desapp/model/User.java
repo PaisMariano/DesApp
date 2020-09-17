@@ -2,12 +2,15 @@ package unq.edu.tpi.desapp.model;
 
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
+import java.util.ArrayList;
+
 public class User {
     private String username;
     private String email;
     private String password;
     private String nickname;
     private Integer points;
+    private ArrayList<Donation> donations;
 
     public User(String username, String email, String password, String nickname){
         this.username = username;
@@ -15,6 +18,7 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.points = 0;
+        this.donations = new ArrayList<>();
     }
 
     public void setUsername(String username) {
@@ -55,6 +59,14 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public ArrayList<Donation> getDonations() {
+        return donations;
+    }
+
+    public void addDonation(Donation donation) {
+        this.donations.add(donation);
     }
 
     public void addPoints(Integer givenPoints) throws IntegerMustBePositive {

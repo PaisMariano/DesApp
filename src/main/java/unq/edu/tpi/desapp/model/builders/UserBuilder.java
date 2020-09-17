@@ -1,6 +1,8 @@
 package unq.edu.tpi.desapp.model.builders;
 
+import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.model.User;
+import java.util.ArrayList;
 
 public class UserBuilder {
     public static UserBuilder aUser() {
@@ -10,9 +12,15 @@ public class UserBuilder {
     private String email = "noEmail";
     private String password = "noPassword";
     private String nickname = "noNickname";
+    private ArrayList<Donation> donations = new ArrayList<>();
 
     public User build() {
         return new User(username, email, password, nickname);
+    }
+
+    public UserBuilder withDonation(Donation givenDonation) {
+        donations.add(givenDonation);
+        return this;
     }
 
     //Faltan los withX - EJ withName(final String name) { }
