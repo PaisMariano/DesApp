@@ -25,4 +25,17 @@ public class DonationBuilder {
         date = givenDate;
         return this;
     }
+    public DonationBuilder withAmount(Integer givenAmount) {
+        amount = givenAmount;
+        return this;
+    }
+    public DonationBuilder withUser(User givenUser) {
+        user = givenUser;
+        return this;
+    }
+
+    public DonationBuilder withProject(Project givenProject) {
+        project = givenProject;
+        return this;
+    }
 }
