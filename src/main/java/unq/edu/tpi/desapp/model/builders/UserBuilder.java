@@ -15,13 +15,6 @@ public class UserBuilder {
     private ArrayList<Donation> donations = new ArrayList<>();
 
     public User build() {
-        return new User(username, email, password, nickname);
+        return new User(username, email, password, nickname, donations);
     }
-
-    public UserBuilder withDonation(Donation givenDonation) {
-        donations.add(givenDonation);
-        return this;
-    }
-
-    //Faltan los withX - EJ withName(final String name) { }
 }

@@ -5,6 +5,11 @@ import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.LocationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
+import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
+import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
+import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
+import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+
 import static org.junit.Assert.*;
 
 public class DonationTest {
@@ -42,6 +47,9 @@ public class DonationTest {
     Donation donationSecondColab2 = DonationBuilder.aDonation()
             .withAmount(1000)
             .build();
+
+    public DonationTest() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
+    }
 
     @Test
     public void calcDoubleShouldReturnZeroWithLocationPopulationGreaterThanTwoThousand() {

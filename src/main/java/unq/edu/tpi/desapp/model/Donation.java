@@ -31,7 +31,7 @@ public class Donation {
         return date;
     }
 
-    public Integer calculatePoints() throws IntegerMustBePositive {
+    public Integer calculatePoints() {
         return calculateSameAmount() + calculateDouble() + calculateSecondColaboration();
     }
 

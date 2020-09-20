@@ -3,6 +3,10 @@ package unq.edu.tpi.desapp.model.builders;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
+import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
+import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
+import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
+import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
 import java.time.LocalDate;
 
@@ -13,7 +17,10 @@ public class DonationBuilder {
     private User user = UserBuilder.aUser().build();
     private Project project = ProjectBuilder.aProject().build();
 
-    public static DonationBuilder aDonation(){
+    public DonationBuilder() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
+    }
+
+    public static DonationBuilder aDonation() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
         return new DonationBuilder();
     }
 
@@ -36,6 +43,11 @@ public class DonationBuilder {
 
     public DonationBuilder withProject(Project givenProject) {
         project = givenProject;
+        return this;
+    }
+
+    public DonationBuilder withComment(String givenComment) {
+        comment = givenComment;
         return this;
     }
 }

@@ -45,4 +45,20 @@ public class UserTest {
         sampleUser.spendPoints(-25);
     }
 
+    @Test
+    public void gettersAndSettersForCoverage() {
+        User sampleUser = UserBuilder.aUser().build();
+        sampleUser.setUsername("Fede");
+        assertEquals("Fede", sampleUser.getUsername());
+
+        sampleUser.setEmail("fede@gmail.com");
+        assertEquals("fede@gmail.com", sampleUser.getEmail());
+
+        sampleUser.setPassword("123123");
+        assertEquals("123123", sampleUser.getPassword());
+
+        sampleUser.setNickname("papooo");
+        assertEquals("papooo", sampleUser.getNickname());
+    }
+
 }

@@ -12,13 +12,17 @@ public class User {
     private Integer points;
     private ArrayList<Donation> donations;
 
-    public User(String username, String email, String password, String nickname){
+    public User(String username, String email, String password, String nickname, ArrayList<Donation> donations){
         this.username = username;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.points = 0;
-        this.donations = new ArrayList<>();
+        this.donations = donations;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
@@ -55,10 +59,6 @@ public class User {
 
     public void setPoints(Integer points) {
         this.points = points;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public ArrayList<Donation> getDonations() {
