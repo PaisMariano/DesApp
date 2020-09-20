@@ -12,6 +12,8 @@ public class User {
     private Integer points;
     private ArrayList<Donation> donations;
 
+    public User() {super();}
+
     public User(String username, String email, String password, String nickname, ArrayList<Donation> donations){
         this.username = username;
         this.email = email;

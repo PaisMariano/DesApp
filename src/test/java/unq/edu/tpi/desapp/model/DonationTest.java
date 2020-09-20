@@ -10,7 +10,7 @@ import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
 import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DonationTest {
     User userForDonations = UserBuilder.aUser()
