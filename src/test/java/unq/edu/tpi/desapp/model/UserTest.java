@@ -4,7 +4,7 @@ import org.junit.Test;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class UserTest {
 
