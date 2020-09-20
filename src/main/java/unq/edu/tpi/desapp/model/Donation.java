@@ -19,12 +19,12 @@ public class Donation {
         this.date = date;
     }
 
-    public Project getProject() {
-        return project;
+    public String getComment() {
+        return comment;
     }
 
-    public User getUser() {
-        return user;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public LocalDate getDate() {
