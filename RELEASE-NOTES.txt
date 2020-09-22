@@ -1,0 +1,16 @@
+---------------------------------------------------------------------
+TAG Entrega 1.0.1
+---------------------------------------------------------------------
+NEW FEATURES:
+* Capa de modelo
+* Tests unitarios con coverage de 95%+
+* Integración con Travis
+* Integración con Codacy
+* Deploy aumático con Heroku
+
+NOTES:
+* Capa de persistencia WIP
+* Al empezar a trabajar con la persistencia nos baja un poco el coverage, pero sigue arriba del 90%
+
+KNOWN ISSUES:
+* No tenemos automatizado el proceso de verificación del coverage en codacy, lo hacemos con un script por ahora
