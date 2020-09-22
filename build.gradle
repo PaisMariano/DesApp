@@ -2,6 +2,18 @@ plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    id 'jacoco'
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled(true)
+        csv.enabled(false)
+    }
 }
 
 group = 'unq.edu.tpi'
@@ -14,7 +26,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     testCompile('junit:junit:4.12')
+    runtimeOnly 'com.h2database:h2'
+
+    compile group: 'com.codacy', name: 'codacy-coverage-reporter', version: '7.1.0'
+
 }
 
 bootJar {
