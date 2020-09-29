@@ -1,12 +1,23 @@
 package unq.edu.tpi.desapp.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "donation")
 public class Donation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private Integer amount;
     private String comment;
     private LocalDate date;
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne()
+    @JoinColumn(name = "project_id")
     private Project project;
 
     public Donation() {super();}
@@ -19,6 +30,22 @@ public class Donation {
         this.date = date;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -29,6 +56,26 @@ public class Donation {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Integer calculatePoints() {

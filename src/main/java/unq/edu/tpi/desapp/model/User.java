@@ -2,15 +2,34 @@ package unq.edu.tpi.desapp.model;
 
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String username;
     private String email;
     private String password;
     private String nickname;
     private Integer points;
-    private ArrayList<Donation> donations;
+
+    @OneToMany(mappedBy = "user")
+    private List<Donation> donations;
+
+    @ManyToMany
+    private List<Project> projects;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_project",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<Project> userProjects;
 
     public User() {super();}
 
@@ -63,12 +82,32 @@ public class User {
         this.points = points;
     }
 
-    public ArrayList<Donation> getDonations() {
+    public List<Donation> getDonations() {
         return donations;
     }
 
     public void addDonation(Donation donation) {
         this.donations.add(donation);
+    }
+
+    public void setDonations(List<Donation> donations) {
+        this.donations = donations;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public List<Project> getUserProjects() {
+        return userProjects;
+    }
+
+    public void setUserProjects(List<Project> userProjects) {
+        this.userProjects = userProjects;
     }
 
     public void addPoints(Integer givenPoints) throws IntegerMustBePositive {
