@@ -1,7 +1,5 @@
 package unq.edu.tpi.desapp.model;
 
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
-
 import java.time.LocalDate;
 
 public class Donation {
@@ -11,6 +9,8 @@ public class Donation {
     private User user;
     private Project project;
 
+    public Donation() {super();}
+
     public Donation(Integer amount, String comment, LocalDate date, User user, Project project) {
         this.amount = amount;
         this.comment = comment;
@@ -19,12 +19,12 @@ public class Donation {
         this.date = date;
     }
 
-    public Project getProject() {
-        return project;
+    public String getComment() {
+        return comment;
     }
 
-    public User getUser() {
-        return user;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public LocalDate getDate() {

@@ -22,6 +22,8 @@ public class Project {
     private Collection<Donation> donations;
     private ProjectState projectState;
 
+    public Project() {super();}
+
     public Project(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Location location) throws EndDateMustBeAfterStartDate, InvalidFactor, InvalidMinClosePercentage {
         this.name = name;
         this.factor = factor;

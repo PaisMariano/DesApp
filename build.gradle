@@ -5,17 +5,6 @@ plugins {
     id 'jacoco'
 }
 
-test {
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled(true)
-        csv.enabled(false)
-    }
-}
-
 group = 'unq.edu.tpi'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
@@ -30,11 +19,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testCompile('junit:junit:4.12')
     runtimeOnly 'com.h2database:h2'
-
-    compile group: 'com.codacy', name: 'codacy-coverage-reporter', version: '7.1.0'
-
 }
 
 bootJar {
     enabled = false
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled(true)
+    }
 }

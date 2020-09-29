@@ -12,7 +12,7 @@ import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ProjectTest {
 

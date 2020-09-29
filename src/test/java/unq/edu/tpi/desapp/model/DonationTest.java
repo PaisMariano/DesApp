@@ -10,41 +10,41 @@ import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
 import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DonationTest {
-    User userForDonations = UserBuilder.aUser()
+    private User userForDonations = UserBuilder.aUser()
             .build();
 
-    Location location3000 = LocationBuilder.aLocation()
+    private Location location3000 = LocationBuilder.aLocation()
             .withPopulation(3000)
             .build();
 
-    Project project3000 = ProjectBuilder.aProject()
+    private Project project3000 = ProjectBuilder.aProject()
             .withLocation(location3000)
             .build();
 
-    Donation donationSameAmount1 = DonationBuilder.aDonation()
+    private Donation donationSameAmount1 = DonationBuilder.aDonation()
             .withAmount(2000)
             .withUser(userForDonations)
             .build();
-    Donation donationSameAmount2 = DonationBuilder.aDonation()
+    private Donation donationSameAmount2 = DonationBuilder.aDonation()
             .withAmount(100)
             .build();
 
-    Donation donationDoubleAmount1 = DonationBuilder.aDonation()
+    private Donation donationDoubleAmount1 = DonationBuilder.aDonation()
             .withAmount(2000)
             .withProject(project3000)
             .build();
-    Donation donationDoubleAmount2 = DonationBuilder.aDonation()
+    private Donation donationDoubleAmount2 = DonationBuilder.aDonation()
             .withAmount(2000)
             .build();
 
-    Donation donationSecondColab1 = DonationBuilder.aDonation()
+    private Donation donationSecondColab1 = DonationBuilder.aDonation()
             .withAmount(1000)
             .withUser(userForDonations)
             .build();
-    Donation donationSecondColab2 = DonationBuilder.aDonation()
+    private Donation donationSecondColab2 = DonationBuilder.aDonation()
             .withAmount(1000)
             .build();
 

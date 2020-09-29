@@ -7,6 +7,17 @@ public class Location {
     private String province;
     private Integer population;
 
+    public Location() {super();}
+
+    public Location(String name, String province, Integer population) throws IntegerMustBePositive {
+        this.name = name;
+        this.province = province;
+        this.population = population;
+        if (population < 1) {
+            throw new IntegerMustBePositive("Invalid population input. Must be greater or equal than 0.");
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -28,15 +39,6 @@ public class Location {
             throw new IntegerMustBePositive("Invalid population input. Must be greater or equal than 0.");
         }
         this.population = population;
-    }
-
-    public Location(String name, String province, Integer population) throws IntegerMustBePositive {
-        this.name = name;
-        this.province = province;
-        this.population = population;
-        if (population < 1) {
-            throw new IntegerMustBePositive("Invalid population input. Must be greater or equal than 0.");
-        }
     }
 
     public Integer getPopulation() {
