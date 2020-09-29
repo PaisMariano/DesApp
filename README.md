@@ -4,3 +4,12 @@
 
 # DesApp
 Trabajo Práctico para la materia Desarrollo de Aplicaciones.
+
+#### Integrantes del grupo
+
+| Nombre   | Apellido  |
+| -------- | --------- |
+| Federico | Cameriere |
+| Mariano  | Pais      |
+
+![UML](https://github.com/PaisMariano/DesApp/blob/master/UML/UML%20Desarrollo%20de%20Apps.png) 
