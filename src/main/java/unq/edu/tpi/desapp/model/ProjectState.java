@@ -5,13 +5,11 @@ import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
 import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "project_state")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public abstract class ProjectState {
     @Id
     private Integer id;
@@ -19,6 +17,8 @@ public abstract class ProjectState {
 
     @OneToOne(mappedBy = "projectState")
     private Project project;
+
+    public ProjectState() {}
 
     public String getState() {
         return state;
