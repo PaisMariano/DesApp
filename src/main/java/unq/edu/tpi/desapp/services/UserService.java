@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,4 +27,12 @@ public class UserService {
     public List<User> findAll() {
         return this.userRepository.findAll();
     }
+
+    public void createUser(String name, String email, String password, String nickname) {
+        //probablemente aca se haga la encriptacion de la password.
+        User user = new User(name, email, password, nickname, new ArrayList<>());
+        save(user);
+    }
+
+
 }

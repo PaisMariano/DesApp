@@ -39,9 +39,6 @@ public class InitServiceInMemory {
     @Autowired
     private DonationService donationService;
 
-    @Autowired
-    private LocationService locationService;
-
     @PostConstruct
     public void initialize() {
         if (className.equals("org.h2.Driver")) {
