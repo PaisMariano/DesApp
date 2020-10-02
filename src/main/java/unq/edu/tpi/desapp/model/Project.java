@@ -1,5 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
+import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
@@ -14,9 +15,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "project")
+@Proxy(lazy = false)
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private Integer factor;
     private Float minClosePercentage;

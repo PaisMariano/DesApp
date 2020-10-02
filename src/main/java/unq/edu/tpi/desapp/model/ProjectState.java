@@ -9,23 +9,46 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "project_state")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class ProjectState {
     @Id
-    private Integer id;
-    private String state;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id", unique=true, nullable=false)
+    protected Integer id;
+
+    protected String state;
 
     @OneToOne(mappedBy = "projectState")
-    private Project project;
+    protected Project project;
 
     public ProjectState() {}
 
-    public String getState() {
-        return state;
-    }
-
     public ProjectState(String state) {
         this.state = state;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public void complete(Project aProject) {
