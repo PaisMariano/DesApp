@@ -48,9 +48,9 @@ public class InitServiceInMemory {
             logger.warn("Init Data Using H2 DB");
             try {
                 //DATOS MAESTROS NECESARIOS.
+                fireInitialDataUser();
                 fireInitialDataProjectState();
                 fireInitialDataProject();
-                fireInitialDataUser();
 
                 //DATOS HISTORICOS.
                 fireInitialDataDonation();
@@ -81,17 +81,15 @@ public class InitServiceInMemory {
         projectStateService.save(suspended);
     }
 
-    private void fireInitialDataLocation() {
-        //Car car = new Car(1, "PNA 879", "Renault Clio");
-        //carService.save(car);
-    }
-
     private void fireInitialDataProject() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage {
-        Project project = ProjectBuilder.aProject()
-                .withProjectState(projectStateService.findByID(1))
+        Project project1 = ProjectBuilder.aProject()
+                .build();
+        project1.addParticipant(userService.findAll().get(0));
+        Project project2 = ProjectBuilder.aProject()
                 .build();
 
-        projectService.save(project);
+        projectService.save(project1);
+        projectService.save(project2);
     }
 
     private void fireInitialDataUser() {

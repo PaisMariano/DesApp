@@ -1,5 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
@@ -33,6 +34,7 @@ public class Project {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonIgnore
     private ProjectState projectState;
 
     @OneToMany(mappedBy = "project")
@@ -63,6 +65,14 @@ public class Project {
         if (endDate.isBefore(startDate)) {
             throw new EndDateMustBeAfterStartDate();
         }
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

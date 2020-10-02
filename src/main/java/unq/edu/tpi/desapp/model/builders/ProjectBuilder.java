@@ -18,7 +18,6 @@ public class ProjectBuilder {
     private LocalDate startDate = LocalDate.now();
     private LocalDate endDate = LocalDate.of(2055, 12, 22);
     private Location location = LocationBuilder.aLocation().build();
-    private ProjectState projectState = new Planned();
 
     public ProjectBuilder() throws IntegerMustBePositive {}
 
@@ -52,11 +51,6 @@ public class ProjectBuilder {
 
     public ProjectBuilder withStartDate(LocalDate givenDate) {
         startDate = givenDate;
-        return this;
-    }
-
-    public ProjectBuilder withProjectState(ProjectState givenState) {
-        projectState = givenState;
         return this;
     }
 }

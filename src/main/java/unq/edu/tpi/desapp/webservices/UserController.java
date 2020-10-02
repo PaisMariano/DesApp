@@ -8,7 +8,6 @@ import unq.edu.tpi.desapp.services.UserService;
 
 import java.util.List;
 
-
 @RestController
 @EnableAutoConfiguration
 public class UserController {
@@ -19,5 +18,10 @@ public class UserController {
     @GetMapping("/users")
     public List<User> allUsers() {
         return userService.findAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") Integer id) {
+        return userService.findByID(id);
     }
 }

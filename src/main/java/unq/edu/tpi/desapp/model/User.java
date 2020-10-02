@@ -33,6 +33,7 @@ public class User {
             name = "user_project",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnore
     private List<Project> userProjects;
 
     public User() {super();}
@@ -44,6 +45,14 @@ public class User {
         this.nickname = nickname;
         this.points = 0;
         this.donations = donations;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUsername() {
