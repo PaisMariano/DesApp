@@ -1,11 +1,16 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "donation")
-public class Donation {
+@Proxy(lazy = false)
+public class Donation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,9 +20,11 @@ public class Donation {
     private LocalDate date;
     @ManyToOne()
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @ManyToOne()
     @JoinColumn(name = "project_id")
+    @JsonIgnore
     private Project project;
 
     public Donation() {super();}

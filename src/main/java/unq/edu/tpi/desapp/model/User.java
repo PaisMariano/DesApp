@@ -1,17 +1,20 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "user")
+@Proxy(lazy = false)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String username;
     private String email;
     private String password;
@@ -21,7 +24,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Donation> donations;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Project> projects;
 
     @ManyToMany(cascade = CascadeType.ALL)

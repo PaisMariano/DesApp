@@ -1,13 +1,14 @@
 package unq.edu.tpi.desapp.model;
 
-import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
 import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
 
+@Entity
 public class Planned extends ProjectState {
     public Planned() {
         super("En Planificacion");
@@ -31,7 +32,7 @@ public class Planned extends ProjectState {
         if (amount < 0) {
             throw new IntegerMustBePositive();
         }
-        Donation newDonation = DonationBuilder.aDonation().withAmount(amount).withComment(comment).withUser(user).withProject(project).withDate(LocalDate.now()).build();
+        Donation newDonation = new Donation(amount, comment, LocalDate.now(), user, project);
         project.addDonation(newDonation);
         user.addPoints(newDonation.calculatePoints());
         project.addParticipant(user);

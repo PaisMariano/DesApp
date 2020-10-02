@@ -1,5 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ public class Location {
     private String province;
     private Integer population;
 
-    @OneToOne(mappedBy = "location")
+    @OneToOne(fetch =FetchType.LAZY, mappedBy = "location")
     private Project project;
 
     public Location() {super();}
