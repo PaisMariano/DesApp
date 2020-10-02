@@ -28,7 +28,7 @@ public class Project {
     private LocalDate endDate;
     private Integer raisedFunds;
 
-    @OneToOne(cascade = CascadeType.ALL) //Probablemente haya que cambiar el tipo de cascada al pedir un JSON
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 

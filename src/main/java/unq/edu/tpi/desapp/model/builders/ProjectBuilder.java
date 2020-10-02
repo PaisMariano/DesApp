@@ -1,9 +1,7 @@
 package unq.edu.tpi.desapp.model.builders;
 
 import unq.edu.tpi.desapp.model.Location;
-import unq.edu.tpi.desapp.model.Planned;
 import unq.edu.tpi.desapp.model.Project;
-import unq.edu.tpi.desapp.model.ProjectState;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
