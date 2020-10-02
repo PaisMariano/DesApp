@@ -1,5 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
@@ -19,6 +20,7 @@ public abstract class ProjectState {
     protected String state;
 
     @OneToOne(mappedBy = "projectState")
+    @JsonIgnore
     protected Project project;
 
     public ProjectState() {}

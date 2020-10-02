@@ -16,6 +16,7 @@ public class Location {
     private Integer population;
 
     @OneToOne(fetch =FetchType.LAZY, mappedBy = "location")
+    @JsonIgnore
     private Project project;
 
     public Location() {super();}

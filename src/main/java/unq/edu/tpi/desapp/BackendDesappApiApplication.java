@@ -12,5 +12,4 @@ public class BackendDesappApiApplication {
         //    System.setProperty("server.servlet.context-path", "/unq");
         SpringApplication.run(BackendDesappApiApplication.class, args);
     }
-
 }
