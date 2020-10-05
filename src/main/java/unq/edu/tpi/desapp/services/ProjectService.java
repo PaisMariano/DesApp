@@ -74,5 +74,6 @@ public class ProjectService {
         } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
             invalidMinClosePercentage.printStackTrace();
         }
+
     }
 }

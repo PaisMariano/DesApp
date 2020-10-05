@@ -87,6 +87,7 @@ public class InitServiceInMemory {
 
         projectService.save(project1);
         projectService.save(project2);
+
     }
 
     private void fireInitialDataUser() {

@@ -32,6 +32,7 @@ public class UserService {
         //probablemente aca se haga la encriptacion de la password.
         User user = new User(name, email, password, nickname, new ArrayList<>());
         save(user);
+
     }
 
 

@@ -16,7 +16,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "project")
-@Proxy(lazy = false)
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
