@@ -1,8 +1,8 @@
 package unq.edu.tpi.desapp.services;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 @Transactional
 public class InitServiceInMemory {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    //protected final Logger logger = LogManager.getLogger(getClass());
 
     @Value("${spring.datasource.driverClassName:NONE}")
     private String className;
@@ -42,7 +42,7 @@ public class InitServiceInMemory {
     @PostConstruct
     public void initialize() {
         if (className.equals("org.h2.Driver")) {
-            logger.warn("Init Data Using H2 DB");
+            //logger.warn("Init Data Using H2 DB");
             try {
                 //DATOS MAESTROS NECESARIOS.
                 fireInitialDataUser();
