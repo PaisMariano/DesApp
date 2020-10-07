@@ -41,32 +41,24 @@ public class ProjectService {
         return findByID(id).getUsers();
     }
 
-    public void createProject(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Integer locationId) {
-        try {
-            Location location = locationService.findByID(locationId);
-            Project project = new Project(name, factor, percentage, startDate, endDate, location);
-            save(project);
-        } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
-            endDateMustBeAfterStartDate.printStackTrace();
-        } catch (InvalidFactor invalidFactor) {
-            invalidFactor.printStackTrace();
-        } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
-            invalidMinClosePercentage.printStackTrace();
-        }
+    public void createProject(Project project) {
+        Location location = locationService.findByID(project.getLocation().getId());
+        project.setLocation(location);
+        save(project);
     }
 
-    public void updateProject(Integer projectId, String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, ProjectState state, Integer locationId) {
+    public void updateProject(Integer projectId, Project project) {
         try {
-            Location location = locationService.findByID(locationId);
-            Project project = findByID(projectId);
-            project.setName(name);
-            project.setFactor(factor);
-            project.setMinClosePercentage(percentage);
-            project.setStartDate(startDate);
-            project.setEndDate(endDate);
-            project.setProjectState(state);
-            project.setLocation(location);
-            save(project);
+            Location newLocation = locationService.findByID(project.getLocation().getId());
+            Project newProject = findByID(projectId);
+            newProject.setName(project.getName());
+            newProject.setFactor(project.getFactor());
+            newProject.setMinClosePercentage(project.getMinClosePercentage());
+            newProject.setStartDate(project.getStartDate());
+            newProject.setEndDate(project.getEndDate());
+            newProject.setProjectState(project.getProjectState());
+            newProject.setLocation(newLocation);
+            save(newProject);
         } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
             endDateMustBeAfterStartDate.printStackTrace();
         } catch (InvalidFactor invalidFactor) {
@@ -75,5 +67,9 @@ public class ProjectService {
             invalidMinClosePercentage.printStackTrace();
         }
 
+    }
+
+    public Collection<User> getDonnorsByProjectId(Integer id) {
+        return findByID(id).getUsers();
     }
 }
