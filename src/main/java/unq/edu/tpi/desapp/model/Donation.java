@@ -1,7 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +8,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "donation")
-@Proxy(lazy = false)
 public class Donation implements Serializable {
 
     @Id
@@ -18,10 +16,12 @@ public class Donation implements Serializable {
     private Integer amount;
     private String comment;
     private LocalDate date;
+
     @ManyToOne()
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
     @ManyToOne()
     @JoinColumn(name = "project_id")
     @JsonIgnore

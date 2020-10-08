@@ -2,10 +2,14 @@ package unq.edu.tpi.desapp.webservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import unq.edu.tpi.desapp.model.Location;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
+import unq.edu.tpi.desapp.model.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.services.ProjectService;
 
 import java.util.Collection;
@@ -18,14 +22,23 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    //PROJECT METHODS
     @GetMapping("/projects")
     public List<Project> allProjects() {
-        return projectService.findAll();
+        return projectService.findAllProjects();
     }
 
     @PostMapping("/projects")
-    public void createProject(@RequestBody Project project) {
-        projectService.createProject(project);
+    @Transactional
+    public ResponseEntity<String> createProject(@RequestBody Project project) {
+        //Exception HANDLER
+        try {
+            projectService.createProject(project);
+        } catch (ElementAlreadyExists elementAlreadyExists) {
+            return ResponseEntity.badRequest()
+                    .body("Location already exists.");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created");
     }
 
     @GetMapping("/projects/{id}")
@@ -35,14 +48,42 @@ public class ProjectController {
 
     @PutMapping("/projects/{id}")
     @Transactional
-    public void updateProject(@RequestBody Project project, @PathVariable("id") Integer id) {
-        System.out.printf(project.getName());
+    public ResponseEntity<String> updateProject(
+            @RequestBody Project project,
+            @PathVariable("id") Integer id) {
 
+        //Exception HANDLER
         projectService.updateProject(id, project);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
+    }
+
+    @PutMapping("/projects/{projectId}/state/{stateId}")
+    public ResponseEntity<String> updateState(
+            @PathVariable("projectId") Integer projectId,
+            @PathVariable("stateId") Integer stateId) {
+
+        projectService.updateProjectService(projectId, stateId);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
     @GetMapping("/projects/{id}/donors")
     public Collection<User> getDonors(@PathVariable("id") Integer id) {
         return projectService.getDonnorsByProjectId(id);
+    }
+
+    //LOCATION METHODS
+    @GetMapping("/locations")
+    public List<Location> allLocations() {
+        return projectService.findAllLocations();
+    }
+
+    @PutMapping("/locations/{id}")
+    public ResponseEntity<String> updateLocation(
+            @RequestBody Location location,
+            @PathVariable("id") Integer id) {
+
+        //Exception HANDLER
+        projectService.updateLocation(id, location);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 }

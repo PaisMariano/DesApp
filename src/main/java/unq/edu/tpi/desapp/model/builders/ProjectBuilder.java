@@ -1,7 +1,9 @@
 package unq.edu.tpi.desapp.model.builders;
 
 import unq.edu.tpi.desapp.model.Location;
+import unq.edu.tpi.desapp.model.Planned;
 import unq.edu.tpi.desapp.model.Project;
+import unq.edu.tpi.desapp.model.ProjectState;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
@@ -16,6 +18,7 @@ public class ProjectBuilder {
     private LocalDate startDate = LocalDate.now();
     private LocalDate endDate = LocalDate.of(2055, 12, 22);
     private Location location = LocationBuilder.aLocation().build();
+    private ProjectState projectState = new Planned();
 
     public ProjectBuilder() throws IntegerMustBePositive {}
 
@@ -24,7 +27,7 @@ public class ProjectBuilder {
     }
 
     public Project build() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
-        return new Project(name, factor, minClosePercentage, startDate, endDate, location);
+        return new Project(name, factor, minClosePercentage, startDate, endDate, location, projectState);
     }
 
     public ProjectBuilder withLocation(Location givenLocation) {
@@ -49,6 +52,11 @@ public class ProjectBuilder {
 
     public ProjectBuilder withStartDate(LocalDate givenDate) {
         startDate = givenDate;
+        return this;
+    }
+
+    public ProjectBuilder withProjectState(ProjectState givenProjectState) {
+        projectState = givenProjectState;
         return this;
     }
 }

@@ -3,16 +3,10 @@ package unq.edu.tpi.desapp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import unq.edu.tpi.desapp.model.Location;
-import unq.edu.tpi.desapp.model.Project;
-import unq.edu.tpi.desapp.model.ProjectState;
-import unq.edu.tpi.desapp.model.User;
-import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
-import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
-import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+import unq.edu.tpi.desapp.model.*;
+import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.repositories.ProjectRepository;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +17,8 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private ProjectStateService projectStateService;
 
     @Transactional
     public Project save(Project project) {
@@ -33,31 +29,51 @@ public class ProjectService {
         return projectRepository.findById(id).get();
     }
 
-    public List<Project> findAll() {
+    public List<Project> findAllProjects() {
         return projectRepository.findAll();
     }
+
+    public List<Location> findAllLocations() { return locationService.findAll(); }
 
     public Collection<User> findDonorsByProjectID(Integer id) {
         return findByID(id).getUsers();
     }
 
-    public void createProject(Project project) {
-        Location location = locationService.findByID(project.getLocation().getId());
-        project.setLocation(location);
-        save(project);
+    public Project createProject(Project project) throws ElementAlreadyExists {
+        Location newLocation = locationService.findByName(project.getLocation().getName());
+        if (newLocation != null) {
+            throw new ElementAlreadyExists();
+        }
+        //Project State Planned() - id 1
+        ProjectState projectState = projectStateService.findByID(1);
+        Project newProject = null;
+        try {
+            newProject = new Project(project.getName(),
+                    project.getFactor(),
+                    project.getMinClosePercentage(),
+                    project.getStartDate(),
+                    project.getEndDate(),
+                    project.getLocation(),
+                    projectState);
+        } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
+            endDateMustBeAfterStartDate.printStackTrace();
+        } catch (InvalidFactor invalidFactor) {
+            invalidFactor.printStackTrace();
+        } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
+            invalidMinClosePercentage.printStackTrace();
+        }
+        save(newProject);
+        return newProject;
     }
 
     public void updateProject(Integer projectId, Project project) {
         try {
-            Location newLocation = locationService.findByID(project.getLocation().getId());
             Project newProject = findByID(projectId);
             newProject.setName(project.getName());
             newProject.setFactor(project.getFactor());
             newProject.setMinClosePercentage(project.getMinClosePercentage());
             newProject.setStartDate(project.getStartDate());
             newProject.setEndDate(project.getEndDate());
-            newProject.setProjectState(project.getProjectState());
-            newProject.setLocation(newLocation);
             save(newProject);
         } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
             endDateMustBeAfterStartDate.printStackTrace();
@@ -66,10 +82,27 @@ public class ProjectService {
         } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
             invalidMinClosePercentage.printStackTrace();
         }
-
     }
 
     public Collection<User> getDonnorsByProjectId(Integer id) {
         return findByID(id).getUsers();
+    }
+
+    public void updateProjectService(Integer projectId, Integer projectStateId) {
+        Project newProject = findByID(projectId);
+        ProjectState newProjectState = projectStateService.findByID(projectStateId);
+        newProject.setProjectState(newProjectState);
+        save(newProject);
+    }
+
+    public void updateLocation(Integer locationId, Location location) {
+        Location newLocation = locationService.findByID(locationId);
+        try {
+            newLocation.setPopulation(location.getPopulation());
+            newLocation.setProvince(location.getProvince());
+            locationService.save(newLocation);
+        } catch (IntegerMustBePositive integerMustBePositive) {
+            integerMustBePositive.printStackTrace();
+        }
     }
 }

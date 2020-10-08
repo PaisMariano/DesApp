@@ -7,6 +7,7 @@ import unq.edu.tpi.desapp.model.Location;
 import unq.edu.tpi.desapp.repositories.LocationRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -25,5 +26,18 @@ public class LocationService {
 
     public List<Location> findAll() {
         return this.locationRepository.findAll();
+    }
+
+    public Location findByName(String name) {
+        List<Location> locations = findAll()
+                .stream()
+                .filter(elem -> elem.getName().toUpperCase()
+                        .equals(name.toUpperCase()))
+                .collect(Collectors.toList());
+
+        if (locations.size() == 0) {
+            return null;
+        }
+        return locations.get(0);
     }
 }

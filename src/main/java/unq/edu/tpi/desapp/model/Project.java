@@ -1,7 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
@@ -31,8 +30,8 @@ public class Project {
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "project_id")
     @JsonIgnore
     private ProjectState projectState;
 
@@ -44,7 +43,7 @@ public class Project {
 
     public Project() {super();}
 
-    public Project(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Location location) throws EndDateMustBeAfterStartDate, InvalidFactor, InvalidMinClosePercentage {
+    public Project(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Location location, ProjectState projectState) throws EndDateMustBeAfterStartDate, InvalidFactor, InvalidMinClosePercentage {
         this.name = name;
         this.factor = factor;
         this.minClosePercentage = percentage;
@@ -54,7 +53,7 @@ public class Project {
         this.raisedFunds = 0;
         this.users = new HashSet<>();
         this.donations = new ArrayList<>();
-        this.projectState = new Planned();
+        this.projectState = projectState;
         if (factor < 0 || factor > 100000) {
             throw new InvalidFactor();
         }

@@ -1,21 +1,26 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicUpdate
 @Table(name = "location")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Column(unique = true, updatable=false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String name;
     private String province;
     private Integer population;
 
-    @OneToOne(fetch =FetchType.LAZY, mappedBy = "location")
+    @OneToOne(mappedBy = "location")
     @JsonIgnore
     private Project project;
 

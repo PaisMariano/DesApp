@@ -39,6 +39,9 @@ public class InitServiceInMemory {
     @Autowired
     private DonationService donationService;
 
+    @Autowired
+    private LocationService locationService;
+
     @PostConstruct
     public void initialize() {
         if (className.equals("org.h2.Driver")) {
@@ -80,9 +83,13 @@ public class InitServiceInMemory {
 
     private void fireInitialDataProject() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage {
         Project project1 = ProjectBuilder.aProject()
+                .withProjectState(projectStateService.findByID(1))
+                .withLocation(new Location("Pepe","hola",2000))
                 .build();
         project1.addParticipant(userService.findAll().get(0));
         Project project2 = ProjectBuilder.aProject()
+                .withProjectState(projectStateService.findByID(1))
+                .withLocation(new Location("Pepe2","hola",2000))
                 .build();
 
         projectService.save(project1);
@@ -97,7 +104,7 @@ public class InitServiceInMemory {
 
     private void fireInitialDataDonation() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage {
         Donation donation = DonationBuilder.aDonation()
-                .withProject(projectService.findAll().get(0))
+                .withProject(projectService.findAllProjects().get(0))
                 .withUser(userService.findAll().get(0))
                 .build();
         donationService.save(donation);

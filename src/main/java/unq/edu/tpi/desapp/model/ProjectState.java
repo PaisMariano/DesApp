@@ -7,6 +7,7 @@ import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
 import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "project_state")
@@ -19,9 +20,12 @@ public abstract class ProjectState {
 
     protected String state;
 
-    @OneToOne(mappedBy = "projectState")
+    @OneToMany(mappedBy = "project")
+    private List<Donation> donations;
+
+    @OneToMany(mappedBy = "projectState")
     @JsonIgnore
-    protected Project project;
+    protected List<Project> projects;
 
     public ProjectState() {}
 
@@ -41,12 +45,20 @@ public abstract class ProjectState {
         this.state = state;
     }
 
-    public Project getProject() {
-        return project;
+    public List<Donation> getDonations() {
+        return donations;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setDonations(List<Donation> donations) {
+        this.donations = donations;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     public String getState() {
