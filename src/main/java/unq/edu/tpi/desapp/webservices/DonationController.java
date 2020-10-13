@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.services.DonationService;
+import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class DonationController {
     public ResponseEntity<String> createDonation(
             @PathVariable("projectId") Integer projectId,
             @PathVariable("userId") Integer userId,
-            @RequestBody Donation donation) {
+            @RequestBody Donation donation) throws ProjectNotFoundException {
 
         //Exception HANDLER
         donationService.createDonation(projectId, userId, donation);

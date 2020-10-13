@@ -7,6 +7,7 @@ import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.repositories.DonationRepository;
+import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class DonationService {
         return this.donationRepository.findAll();
     }
 
-    public void createDonation(Integer projectId, Integer userId, Donation donation) {
+    public void createDonation(Integer projectId, Integer userId, Donation donation) throws ProjectNotFoundException  {
         User user = userService.findByID(userId);
         Project project = projectService.findByID(projectId);
 

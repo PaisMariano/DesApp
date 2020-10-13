@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Location;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
-import unq.edu.tpi.desapp.model.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.services.ProjectService;
+import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,19 +32,14 @@ public class ProjectController {
 
     @PostMapping("/projects")
     @Transactional
-    public ResponseEntity<String> createProject(@RequestBody Project project) {
-        //Exception HANDLER
-        try {
-            projectService.createProject(project);
-        } catch (ElementAlreadyExists elementAlreadyExists) {
-            return ResponseEntity.badRequest()
-                    .body("Location already exists.");
-        }
+    public ResponseEntity<String> createProject(@RequestBody Project project) throws BadRequestException, ElementAlreadyExists{
+        projectService.createProject(project);
+
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
     }
 
     @GetMapping("/projects/{id}")
-    public Project getProject(@PathVariable("id") Integer id) {
+    public Project getProject(@PathVariable("id") Integer id) throws ProjectNotFoundException {
         return projectService.findByID(id);
     }
 
@@ -50,9 +47,8 @@ public class ProjectController {
     @Transactional
     public ResponseEntity<String> updateProject(
             @RequestBody Project project,
-            @PathVariable("id") Integer id) {
+            @PathVariable("id") Integer id) throws ProjectNotFoundException, BadRequestException {
 
-        //Exception HANDLER
         projectService.updateProject(id, project);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
@@ -60,14 +56,14 @@ public class ProjectController {
     @PutMapping("/projects/{projectId}/state/{stateId}")
     public ResponseEntity<String> updateState(
             @PathVariable("projectId") Integer projectId,
-            @PathVariable("stateId") Integer stateId) {
+            @PathVariable("stateId") Integer stateId) throws ProjectNotFoundException {
 
         projectService.updateProjectService(projectId, stateId);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
     @GetMapping("/projects/{id}/donors")
-    public Collection<User> getDonors(@PathVariable("id") Integer id) {
+    public Collection<User> getDonors(@PathVariable("id") Integer id) throws ProjectNotFoundException {
         return projectService.getDonnorsByProjectId(id);
     }
 

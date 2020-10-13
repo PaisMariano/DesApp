@@ -6,9 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.repositories.ProjectRepository;
+import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProjectService {
@@ -25,8 +29,14 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project findByID(Integer id) {
-        return projectRepository.findById(id).get();
+    public Project findByID(Integer id) throws ProjectNotFoundException {
+        Project newProject = null;
+        try {
+            newProject = projectRepository.findById(id).get();
+        } catch (NoSuchElementException ex) {
+            throw ProjectNotFoundException.createWith(id.toString());
+        }
+        return newProject;
     }
 
     public List<Project> findAllProjects() {
@@ -35,17 +45,18 @@ public class ProjectService {
 
     public List<Location> findAllLocations() { return locationService.findAll(); }
 
-    public Collection<User> findDonorsByProjectID(Integer id) {
+    public Collection<User> findDonorsByProjectID(Integer id) throws ProjectNotFoundException {
         return findByID(id).getUsers();
     }
 
-    public Project createProject(Project project) throws ElementAlreadyExists {
+    public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
-            throw new ElementAlreadyExists();
+            throw ElementAlreadyExists.createWith();
         }
         //Project State Planned() - id 1
         ProjectState projectState = projectStateService.findByID(1);
+
         Project newProject = null;
         try {
             newProject = new Project(project.getName(),
@@ -55,40 +66,33 @@ public class ProjectService {
                     project.getEndDate(),
                     project.getLocation(),
                     projectState);
-        } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
-            endDateMustBeAfterStartDate.printStackTrace();
-        } catch (InvalidFactor invalidFactor) {
-            invalidFactor.printStackTrace();
-        } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
-            invalidMinClosePercentage.printStackTrace();
+        } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
+            throw BadRequestException.createWith(ex.getMessage());
         }
         save(newProject);
         return newProject;
     }
 
-    public void updateProject(Integer projectId, Project project) {
+    public void updateProject(Integer projectId, Project project) throws ProjectNotFoundException, BadRequestException {
+        Project newProject = findByID(projectId);
+
         try {
-            Project newProject = findByID(projectId);
             newProject.setName(project.getName());
             newProject.setFactor(project.getFactor());
             newProject.setMinClosePercentage(project.getMinClosePercentage());
             newProject.setStartDate(project.getStartDate());
             newProject.setEndDate(project.getEndDate());
             save(newProject);
-        } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
-            endDateMustBeAfterStartDate.printStackTrace();
-        } catch (InvalidFactor invalidFactor) {
-            invalidFactor.printStackTrace();
-        } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
-            invalidMinClosePercentage.printStackTrace();
+        } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
+            throw BadRequestException.createWith(ex.getMessage());
         }
     }
 
-    public Collection<User> getDonnorsByProjectId(Integer id) {
+    public Collection<User> getDonnorsByProjectId(Integer id) throws ProjectNotFoundException {
         return findByID(id).getUsers();
     }
 
-    public void updateProjectService(Integer projectId, Integer projectStateId) {
+    public void updateProjectService(Integer projectId, Integer projectStateId) throws ProjectNotFoundException {
         Project newProject = findByID(projectId);
         ProjectState newProjectState = projectStateService.findByID(projectStateId);
         newProject.setProjectState(newProjectState);
