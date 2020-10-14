@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.services.UserService;
+import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Integer id) {
+    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
         return userService.findByID(id);
     }
 }

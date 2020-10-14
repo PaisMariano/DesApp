@@ -3,11 +3,15 @@ package unq.edu.tpi.desapp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.repositories.UserRepository;
+import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -20,8 +24,14 @@ public class UserService {
         return this.userRepository.save(model);
     }
 
-    public User findByID(Integer id) {
-        return this.userRepository.findById(id).get();
+    public User findByID(Integer id) throws UserNotFoundException {
+        User newUser = null;
+        try {
+            newUser = this.userRepository.findById(id).get();
+        } catch (NoSuchElementException ex) {
+            throw UserNotFoundException.createWith(id.toString());
+        }
+        return newUser;
     }
 
     public List<User> findAll() {

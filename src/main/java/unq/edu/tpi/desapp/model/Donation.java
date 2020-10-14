@@ -1,6 +1,7 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,7 +30,11 @@ public class Donation implements Serializable {
 
     public Donation() {super();}
 
-    public Donation(Integer amount, String comment, LocalDate date, User user, Project project) {
+    public Donation(Integer amount, String comment, LocalDate date, User user, Project project) throws IntegerMustBePositive {
+        if (amount < 0) {
+            throw new IntegerMustBePositive();
+        }
+
         this.amount = amount;
         this.comment = comment;
         this.user = user;
@@ -87,6 +92,18 @@ public class Donation implements Serializable {
 
     public Integer calculatePoints() {
         return calculateSameAmount() + calculateDouble() + calculateSecondColaboration();
+    }
+
+    public void setAmountWithException(Integer amount) throws IntegerMustBePositive {
+        if (this.amount < 0) {
+            throw new IntegerMustBePositive();
+        }
+
+        this.amount = amount;
+    }
+
+    public void calculateUserPoints() throws IntegerMustBePositive {
+        this.user.addPoints(this.calculatePoints());
     }
 
     public Integer calculateDouble() {

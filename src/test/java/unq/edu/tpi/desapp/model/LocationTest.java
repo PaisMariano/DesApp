@@ -16,7 +16,7 @@ public class LocationTest {
     @Test(expected = IntegerMustBePositive.class)
     public void cantSetLowerThan1PopulationEither() throws IntegerMustBePositive {
         Location sampleLocation = LocationBuilder.aLocation().build();
-        sampleLocation.setPopulation(0);
+        sampleLocation.setPopulationWithException(0);
     }
 
     @Test
@@ -24,7 +24,7 @@ public class LocationTest {
         Location sampleLocation = LocationBuilder.aLocation().build();
         sampleLocation.setName("Shangri La");
         sampleLocation.setProvince("Babilonia");
-        sampleLocation.setPopulation(999);
+        sampleLocation.setPopulationWithException(999);
         assertEquals("Shangri La", sampleLocation.getName());
         assertEquals("Babilonia", sampleLocation.getProvince());
         assertEquals((Integer) 999, sampleLocation.getPopulation());

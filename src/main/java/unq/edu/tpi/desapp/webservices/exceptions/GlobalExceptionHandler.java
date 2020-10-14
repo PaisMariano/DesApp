@@ -13,7 +13,6 @@ import org.springframework.web.util.WebUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,11 +60,6 @@ public class GlobalExceptionHandler {
             return handleLocationNotFoundException(lnfe, headers, status, request);
         } else if (ex instanceof ElementAlreadyExists) {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            ElementAlreadyExists eaee = (ElementAlreadyExists) ex;
-
-            return handleElementAlreadyExists(eaee, headers, status, request);
-        } else if (ex instanceof ElementAlreadyExists) {
-            HttpStatus status = HttpStatus.IM_USED;
             ElementAlreadyExists eaee = (ElementAlreadyExists) ex;
 
             return handleElementAlreadyExists(eaee, headers, status, request);

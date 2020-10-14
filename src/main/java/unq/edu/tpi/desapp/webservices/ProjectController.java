@@ -32,7 +32,7 @@ public class ProjectController {
 
     @PostMapping("/projects")
     @Transactional
-    public ResponseEntity<String> createProject(@RequestBody Project project) throws BadRequestException, ElementAlreadyExists{
+    public ResponseEntity<String> createProject(@RequestBody(required = false) Project project) throws BadRequestException, ElementAlreadyExists{
         projectService.createProject(project);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
@@ -50,6 +50,7 @@ public class ProjectController {
             @PathVariable("id") Integer id) throws ProjectNotFoundException, BadRequestException {
 
         projectService.updateProject(id, project);
+
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
@@ -76,9 +77,8 @@ public class ProjectController {
     @PutMapping("/locations/{id}")
     public ResponseEntity<String> updateLocation(
             @RequestBody Location location,
-            @PathVariable("id") Integer id) {
+            @PathVariable("id") Integer id) throws BadRequestException {
 
-        //Exception HANDLER
         projectService.updateLocation(id, location);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }

@@ -71,7 +71,11 @@ public class Location {
         return population;
     }
 
-    public void setPopulation(Integer population) throws IntegerMustBePositive {
+    public void setPopulation(Integer population) {
+        this.population = population;
+    }
+
+    public void setPopulationWithException(Integer population) throws IntegerMustBePositive {
         if (population < 1) {
             throw new IntegerMustBePositive("Invalid population input. Must be greater or equal than 0.");
         }

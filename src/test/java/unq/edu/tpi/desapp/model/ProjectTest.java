@@ -192,33 +192,33 @@ public class ProjectTest {
         sampleProject.setStartDate(LocalDate.of(2020,1,27));
         assertEquals(LocalDate.of(2020,1,27), sampleProject.getStartDate());
 
-        sampleProject.setEndDate(LocalDate.of(2022, 8, 17));
+        sampleProject.setEndDateWithException(LocalDate.of(2022, 8, 17));
         assertEquals(LocalDate.of(2022, 8, 17), sampleProject.getEndDate());
 
-        sampleProject.setRaisedFunds(666);
+        sampleProject.setRaisedFundsWithException(666);
         assertEquals((Integer) 666, sampleProject.getRaisedFunds());
 
         Location sampleLocation = LocationBuilder.aLocation().build();
         sampleProject.setLocation(sampleLocation);
         assertEquals(sampleLocation, sampleProject.getLocation());
 
-        sampleProject.setFactor(5555);
+        sampleProject.setFactorWithException(5555);
         assertEquals((Integer) 5555, sampleProject.getFactor());
 
-        sampleProject.setMinClosePercentage(88.0f);
+        sampleProject.setMinClosePercentageWithException(88.0f);
         assertEquals((Float) 88.0f, sampleProject.getMinClosePercentage());
     }
 
     @Test(expected = EndDateMustBeAfterStartDate.class)
     public void cantSetEndDateBeforeStartDate() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().withStartDate(LocalDate.of(2020, 4, 19)).withEndDate(LocalDate.of(2222, 12, 22)).build();
-        sampleProject.setEndDate(LocalDate.of(2019, 7, 15));
+        sampleProject.setEndDateWithException(LocalDate.of(2019, 7, 15));
     }
 
     @Test(expected = IntegerMustBePositive.class)
     public void cantSetNegativeRaisedFunds() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setRaisedFunds(-33);
+        sampleProject.setRaisedFundsWithException(-33);
     }
 
     @Test(expected = IntegerMustBePositive.class)
@@ -230,24 +230,24 @@ public class ProjectTest {
     @Test(expected = InvalidFactor.class)
     public void cantSetNegativeFactor() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setFactor(-11);
+        sampleProject.setFactorWithException(-11);
     }
 
     @Test(expected = InvalidFactor.class)
     public void cantSetFactorHigherThan100000() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setFactor(111111);
+        sampleProject.setFactorWithException(111111);
     }
 
     @Test(expected = InvalidMinClosePercentage.class)
     public void cantSetMinClosePercentageLowerThan50Percent() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setMinClosePercentage(44.4f);
+        sampleProject.setMinClosePercentageWithException(44.4f);
     }
 
     @Test(expected = InvalidMinClosePercentage.class)
     public void cantSetMinClosePercentageHigherThan100Percent() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setMinClosePercentage(115.5f);
+        sampleProject.setMinClosePercentageWithException(115.5f);
     }
 }

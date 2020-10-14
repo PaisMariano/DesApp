@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.services.DonationService;
+import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
 import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +26,7 @@ public class DonationController {
     }
 
     @GetMapping("/donations/{id}")
-    public Donation getDonation(@PathVariable("id") Integer id) {
+    public Donation getDonation(@PathVariable("id") Integer id) throws DonationNotFoundException {
         return donationService.findByID(id);
     }
 
@@ -31,9 +34,8 @@ public class DonationController {
     public ResponseEntity<String> createDonation(
             @PathVariable("projectId") Integer projectId,
             @PathVariable("userId") Integer userId,
-            @RequestBody Donation donation) throws ProjectNotFoundException {
+            @RequestBody Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
 
-        //Exception HANDLER
         donationService.createDonation(projectId, userId, donation);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");

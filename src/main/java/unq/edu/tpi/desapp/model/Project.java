@@ -143,21 +143,37 @@ public class Project {
 
     public String getState() { return this.getProjectState().getState(); }
 
-    public void setEndDate(LocalDate endDate) throws EndDateMustBeAfterStartDate {
+    public void setFactor(Integer factor) {
+        this.factor = factor;
+    }
+
+    public void setMinClosePercentage(Float minClosePercentage) {
+        this.minClosePercentage = minClosePercentage;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setRaisedFunds(Integer raisedFunds) {
+        this.raisedFunds = raisedFunds;
+    }
+
+    public void setEndDateWithException(LocalDate endDate) throws EndDateMustBeAfterStartDate {
         if (endDate.isBefore(startDate)) {
             throw new EndDateMustBeAfterStartDate();
         }
         this.endDate = endDate;
     }
 
-    public void setRaisedFunds(Integer raisedFunds) throws IntegerMustBePositive {
+    public void setRaisedFundsWithException(Integer raisedFunds) throws IntegerMustBePositive {
         if (raisedFunds < 0) {
             throw new IntegerMustBePositive();
         }
         this.raisedFunds = raisedFunds;
     }
 
-    public void setFactor(Integer factor) throws InvalidFactor {
+    public void setFactorWithException(Integer factor) throws InvalidFactor {
         if (factor < 0 || factor > 100000) {
             throw new InvalidFactor();
         }
@@ -168,7 +184,7 @@ public class Project {
         return minClosePercentage;
     }
 
-    public void setMinClosePercentage(Float minClosePercentage) throws InvalidMinClosePercentage {
+    public void setMinClosePercentageWithException(Float minClosePercentage) throws InvalidMinClosePercentage {
         if (minClosePercentage < 50.0 || minClosePercentage > 100.0) {
             throw new InvalidMinClosePercentage();
         }

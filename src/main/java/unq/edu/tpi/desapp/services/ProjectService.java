@@ -50,6 +50,8 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
+        verifyProjectJson(project);
+
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
             throw ElementAlreadyExists.createWith();
@@ -78,10 +80,10 @@ public class ProjectService {
 
         try {
             newProject.setName(project.getName());
-            newProject.setFactor(project.getFactor());
-            newProject.setMinClosePercentage(project.getMinClosePercentage());
+            newProject.setFactorWithException(project.getFactor());
+            newProject.setMinClosePercentageWithException(project.getMinClosePercentage());
             newProject.setStartDate(project.getStartDate());
-            newProject.setEndDate(project.getEndDate());
+            newProject.setEndDateWithException(project.getEndDate());
             save(newProject);
         } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
             throw BadRequestException.createWith(ex.getMessage());
@@ -99,14 +101,26 @@ public class ProjectService {
         save(newProject);
     }
 
-    public void updateLocation(Integer locationId, Location location) {
+    public void updateLocation(Integer locationId, Location location) throws BadRequestException {
         Location newLocation = locationService.findByID(locationId);
         try {
-            newLocation.setPopulation(location.getPopulation());
+            newLocation.setPopulationWithException(location.getPopulation());
             newLocation.setProvince(location.getProvince());
             locationService.save(newLocation);
-        } catch (IntegerMustBePositive integerMustBePositive) {
-            integerMustBePositive.printStackTrace();
+        } catch (IntegerMustBePositive ex) {
+            throw BadRequestException.createWith(ex.getMessage());
+        }
+    }
+
+    private void verifyProjectJson(Project project) throws BadRequestException {
+        try{
+            project.getFactor();
+            project.getMinClosePercentage();
+            project.getName();
+            project.getStartDate();
+            project.getEndDate();
+        } catch (Exception ex) {
+            throw BadRequestException.createWith("Wrong body or no body in request");
         }
     }
 }

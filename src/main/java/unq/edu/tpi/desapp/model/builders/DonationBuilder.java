@@ -24,7 +24,7 @@ public class DonationBuilder {
         return new DonationBuilder();
     }
 
-    public Donation build() {
+    public Donation build() throws IntegerMustBePositive {
         return new Donation(amount, comment, date, user, project);
     }
 
