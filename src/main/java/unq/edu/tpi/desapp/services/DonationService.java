@@ -59,6 +59,8 @@ public class DonationService {
                     project);
             newDonation.calculateUserPoints();
             project.addFunds(donation.getAmount());
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
         } catch (IntegerMustBePositive ex) {
             throw BadRequestException.createWith(ex.getMessage());
         }

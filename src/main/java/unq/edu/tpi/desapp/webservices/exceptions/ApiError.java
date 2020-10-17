@@ -3,17 +3,17 @@ package unq.edu.tpi.desapp.webservices.exceptions;
 import java.util.List;
 
 public class ApiError {
-    private List<String> errors;
+    private String error;
 
-    public ApiError(List<String> errors) {
-        this.errors = errors;
+    public ApiError(String error) {
+        this.error = error;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public String getError() {
+        return error;
     }
 
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
+    public void setError(String error) {
+        this.error = error;
     }
 }

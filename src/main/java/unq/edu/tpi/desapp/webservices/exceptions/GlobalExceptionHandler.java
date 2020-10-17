@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -89,42 +90,42 @@ public class GlobalExceptionHandler {
                                                                    HttpHeaders headers, HttpStatus status,
                                                                    WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleProjectNotFoundException(ProjectNotFoundException ex,
                                                                    HttpHeaders headers, HttpStatus status,
                                                                    WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleLocationNotFoundException(LocationNotFoundException ex,
                                                                    HttpHeaders headers, HttpStatus status,
                                                                    WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleDonationNotFoundException(DonationNotFoundException ex,
                                                                    HttpHeaders headers, HttpStatus status,
                                                                    WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleElementAlreadyExists(ElementAlreadyExists ex,
                                                                        HttpHeaders headers, HttpStatus status,
                                                                        WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleBadRequestException(BadRequestException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
-        return handleExceptionInternal(ex, new ApiError(errors), headers, status, request);
+        return handleExceptionInternal(ex, new ApiError(errors.get(0)), headers, status, request);
     }
 
     protected ResponseEntity<ApiError> handleExceptionInternal(Exception ex, @Nullable ApiError body,

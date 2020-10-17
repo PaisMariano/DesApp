@@ -2,8 +2,11 @@ package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Proxy;
+import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +39,15 @@ public class User {
     @JsonIgnore
     private List<Project> userProjects;
 
-    public User() {super();}
+    public User() throws BadEmailAddressException {super();}
 
-    public User(String username, String email, String password, String nickname, ArrayList<Donation> donations){
+    public User(String username,
+                String email,
+                String password,
+                String nickname,
+                ArrayList<Donation> donations) throws BadEmailAddressException {
         this.username = username;
-        this.email = email;
+        this.email = validateEmail(email);
         this.password = password;
         this.nickname = nickname;
         this.points = 0;
@@ -137,4 +144,14 @@ public class User {
         points -= pointsToSpend;
     }
 
+    private String validateEmail(String email) throws BadEmailAddressException {
+        try {
+            System.out.println("hola");
+            //InternetAddress internetAddress = new InternetAddress(email);
+            //internetAddress.validate();
+        } catch (Exception ex) {
+            throw new BadEmailAddressException();
+        }
+        return email;
+    }
 }

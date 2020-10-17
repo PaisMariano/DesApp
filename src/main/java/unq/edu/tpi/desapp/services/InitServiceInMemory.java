@@ -13,10 +13,7 @@ import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
-import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
-import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
-import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+import unq.edu.tpi.desapp.model.exceptions.*;
 
 @Service
 @Transactional
@@ -55,14 +52,12 @@ public class InitServiceInMemory {
                 //DATOS HISTORICOS.
                 fireInitialDataDonation();
 
-            } catch (EndDateMustBeAfterStartDate endDateMustBeAfterStartDate) {
-                endDateMustBeAfterStartDate.printStackTrace();
-            } catch (InvalidFactor invalidFactor) {
-                invalidFactor.printStackTrace();
-            } catch (IntegerMustBePositive integerMustBePositive) {
-                integerMustBePositive.printStackTrace();
-            } catch (InvalidMinClosePercentage invalidMinClosePercentage) {
-                invalidMinClosePercentage.printStackTrace();
+            } catch (EndDateMustBeAfterStartDate |
+                    BadEmailAddressException |
+                    IntegerMustBePositive |
+                    InvalidMinClosePercentage |
+                    InvalidFactor ex) {
+                System.out.println(ex.getMessage());
             }
         }
     }
@@ -97,12 +92,12 @@ public class InitServiceInMemory {
 
     }
 
-    private void fireInitialDataUser() {
+    private void fireInitialDataUser() throws BadEmailAddressException {
         User user = UserBuilder.aUser().build();
         userService.save(user);
     }
 
-    private void fireInitialDataDonation() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage {
+    private void fireInitialDataDonation() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage, BadEmailAddressException {
         Donation donation = DonationBuilder.aDonation()
                 .withProject(projectService.findAllProjects().get(0))
                 .withUser(userService.findAll().get(0))

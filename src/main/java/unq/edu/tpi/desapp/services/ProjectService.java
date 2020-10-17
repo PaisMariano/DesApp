@@ -50,8 +50,6 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
-        verifyProjectJson(project);
-
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
             throw ElementAlreadyExists.createWith();
@@ -68,6 +66,8 @@ public class ProjectService {
                     project.getEndDate(),
                     project.getLocation(),
                     projectState);
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
         } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
             throw BadRequestException.createWith(ex.getMessage());
         }
@@ -85,6 +85,8 @@ public class ProjectService {
             newProject.setStartDate(project.getStartDate());
             newProject.setEndDateWithException(project.getEndDate());
             save(newProject);
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
         } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
             throw BadRequestException.createWith(ex.getMessage());
         }
@@ -107,20 +109,10 @@ public class ProjectService {
             newLocation.setPopulationWithException(location.getPopulation());
             newLocation.setProvince(location.getProvince());
             locationService.save(newLocation);
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
         } catch (IntegerMustBePositive ex) {
             throw BadRequestException.createWith(ex.getMessage());
-        }
-    }
-
-    private void verifyProjectJson(Project project) throws BadRequestException {
-        try{
-            project.getFactor();
-            project.getMinClosePercentage();
-            project.getName();
-            project.getStartDate();
-            project.getEndDate();
-        } catch (Exception ex) {
-            throw BadRequestException.createWith("Wrong body or no body in request");
         }
     }
 }
