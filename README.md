@@ -5,7 +5,7 @@
 # DesApp
 Trabajo Práctico para la materia Desarrollo de Aplicaciones.
 
-#### Integrantes del grupo
+# Integrantes del grupo
 
 | Nombre   | Apellido  |
 | -------- | --------- |

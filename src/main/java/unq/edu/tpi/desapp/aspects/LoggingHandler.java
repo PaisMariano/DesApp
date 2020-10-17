@@ -1,7 +1,6 @@
 package unq.edu.tpi.desapp.aspects;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,11 +17,12 @@ import java.util.Arrays;
 @Order(0)
 public class LoggingHandler {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     /// CUSTOM  POINTCUT////
     @Pointcut("execution(* unq.edu.tpi.desapp.webservices.*.*(..))")
     public void methodsStarterServicePointcut() {
+        //No behaviour method
     }
 
     @Before("methodsStarterServicePointcut()")

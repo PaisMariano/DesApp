@@ -1,9 +1,5 @@
 package unq.edu.tpi.desapp.services;
 
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +10,7 @@ import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
 import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
 
 import java.util.ArrayList;
 
@@ -38,11 +35,8 @@ public class InitServiceInMemory {
     @Autowired
     private DonationService donationService;
 
-    @Autowired
-    private LocationService locationService;
-
     @PostConstruct
-    public void initialize() throws BadEmailAddressException, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage, BadRequestException {
+    public void initialize() throws Exception {
         if (className.equals("org.h2.Driver")) {
             //logger.warn("Init Data Using H2 DB");
                 //DATOS MAESTROS NECESARIOS.
@@ -84,7 +78,7 @@ public class InitServiceInMemory {
         projectService.save(project2);
     }
 
-    private void fireInitialDataUser() throws BadEmailAddressException, BadRequestException {
+    private void fireInitialDataUser() throws BadEmailAddressException, BadRequestException, ElementAlreadyExists {
         userService.createUser(new User(
                 "Mariano",
                 "paismariano@gmail.com",

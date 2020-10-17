@@ -1,7 +1,5 @@
 package unq.edu.tpi.desapp.webservices.exceptions;
 
-import java.util.List;
-
 public class ApiError {
     private String error;
 

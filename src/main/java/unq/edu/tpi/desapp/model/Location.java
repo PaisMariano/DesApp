@@ -1,7 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 

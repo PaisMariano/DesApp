@@ -52,7 +52,7 @@ public class ProjectService {
     public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
-            throw ElementAlreadyExists.createWith();
+            throw new ElementAlreadyExists("Location already exists.");
         }
         //Project State Planned() - id 1
         ProjectState projectState = projectStateService.findByID(1);

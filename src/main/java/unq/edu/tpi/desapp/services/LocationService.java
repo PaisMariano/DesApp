@@ -31,8 +31,7 @@ public class LocationService {
     public Location findByName(String name) {
         List<Location> locations = findAll()
                 .stream()
-                .filter(elem -> elem.getName().toUpperCase()
-                        .equals(name.toUpperCase()))
+                .filter(elem -> elem.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
 
         if (locations.size() == 0) {
