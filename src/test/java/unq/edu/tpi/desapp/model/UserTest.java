@@ -2,6 +2,7 @@ package unq.edu.tpi.desapp.model;
 
 import org.junit.Test;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
+import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import static org.junit.Assert.assertEquals;
@@ -9,13 +10,13 @@ import static org.junit.Assert.assertEquals;
 public class UserTest {
 
     @Test
-    public void usersAreCreatedWith0PointsInitially() {
+    public void usersAreCreatedWith0PointsInitially() throws BadEmailAddressException {
         User newUser = UserBuilder.aUser().build();
         assertEquals((Integer)0, newUser.getPoints());
     }
 
     @Test
-    public void add100PointsToUser2Times() throws IntegerMustBePositive {
+    public void add100PointsToUser2Times() throws IntegerMustBePositive, BadEmailAddressException {
         User sampleUser = UserBuilder.aUser().build();
         sampleUser.addPoints(100);
         assertEquals((Integer)100, sampleUser.getPoints());
@@ -24,13 +25,13 @@ public class UserTest {
     }
 
     @Test(expected = IntegerMustBePositive.class)
-    public void cantAddNegativePointsToUser() throws IntegerMustBePositive {
+    public void cantAddNegativePointsToUser() throws IntegerMustBePositive, BadEmailAddressException {
         User sampleUser = UserBuilder.aUser().build();
         sampleUser.addPoints(-10);
     }
 
     @Test
-    public void spend100PointsToUserWith200Points2Times() throws IntegerMustBePositive {
+    public void spend100PointsToUserWith200Points2Times() throws IntegerMustBePositive, BadEmailAddressException {
         User sampleUser = UserBuilder.aUser().build();
         sampleUser.setPoints(200);
         sampleUser.spendPoints(100);
@@ -40,13 +41,13 @@ public class UserTest {
     }
 
     @Test(expected = IntegerMustBePositive.class)
-    public void cantSpendNegativePoints() throws IntegerMustBePositive {
+    public void cantSpendNegativePoints() throws IntegerMustBePositive, BadEmailAddressException {
         User sampleUser = UserBuilder.aUser().build();
         sampleUser.spendPoints(-25);
     }
 
     @Test
-    public void gettersAndSettersForCoverage() {
+    public void gettersAndSettersForCoverage() throws BadEmailAddressException {
         User sampleUser = UserBuilder.aUser().build();
         sampleUser.setUsername("Fede");
         assertEquals("Fede", sampleUser.getUsername());
