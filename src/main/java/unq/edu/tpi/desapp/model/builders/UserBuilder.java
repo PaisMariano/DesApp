@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class UserBuilder {
     private String username = "noUsername";
-    private String email = "paismarianoa@gmail.com";
+    private String email = "paismariano@gmail.com";
     private String password = "noPassword";
     private String nickname = "noNickname";
     private ArrayList<Donation> donations = new ArrayList<>();

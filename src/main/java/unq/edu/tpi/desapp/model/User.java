@@ -5,11 +5,11 @@ import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "user")
@@ -39,7 +39,7 @@ public class User {
     @JsonIgnore
     private List<Project> userProjects;
 
-    public User() throws BadEmailAddressException {super();}
+    public User() {super();}
 
     public User(String username,
                 String email,
@@ -145,13 +145,14 @@ public class User {
     }
 
     private String validateEmail(String email) throws BadEmailAddressException {
-        try {
-            System.out.println("hola");
-            //InternetAddress internetAddress = new InternetAddress(email);
-            //internetAddress.validate();
-        } catch (Exception ex) {
+        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(email);
+        if (!matcher.matches())
             throw new BadEmailAddressException();
-        }
+
         return email;
     }
 }

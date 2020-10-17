@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
-import unq.edu.tpi.desapp.model.builders.UserBuilder;
 import unq.edu.tpi.desapp.model.exceptions.*;
+import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
+
+import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -40,10 +42,9 @@ public class InitServiceInMemory {
     private LocationService locationService;
 
     @PostConstruct
-    public void initialize() {
+    public void initialize() throws BadEmailAddressException, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage, BadRequestException {
         if (className.equals("org.h2.Driver")) {
             //logger.warn("Init Data Using H2 DB");
-            try {
                 //DATOS MAESTROS NECESARIOS.
                 fireInitialDataUser();
                 fireInitialDataProjectState();
@@ -51,14 +52,6 @@ public class InitServiceInMemory {
 
                 //DATOS HISTORICOS.
                 fireInitialDataDonation();
-
-            } catch (EndDateMustBeAfterStartDate |
-                    BadEmailAddressException |
-                    IntegerMustBePositive |
-                    InvalidMinClosePercentage |
-                    InvalidFactor ex) {
-                System.out.println(ex.getMessage());
-            }
         }
     }
 
@@ -89,12 +82,15 @@ public class InitServiceInMemory {
 
         projectService.save(project1);
         projectService.save(project2);
-
     }
 
-    private void fireInitialDataUser() throws BadEmailAddressException {
-        User user = UserBuilder.aUser().build();
-        userService.save(user);
+    private void fireInitialDataUser() throws BadEmailAddressException, BadRequestException {
+        userService.createUser(new User(
+                "Mariano",
+                "paismariano@gmail.com",
+                "sinPass",
+                "noNickname",
+                new ArrayList<>()));
     }
 
     private void fireInitialDataDonation() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage, BadEmailAddressException {

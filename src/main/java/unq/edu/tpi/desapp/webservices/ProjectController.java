@@ -32,7 +32,7 @@ public class ProjectController {
 
     @PostMapping("/projects")
     @Transactional
-    public ResponseEntity<String> createProject(@RequestBody(required = false) Project project) throws BadRequestException, ElementAlreadyExists{
+    public ResponseEntity<String> createProject(@RequestBody Project project) throws BadRequestException, ElementAlreadyExists{
         projectService.createProject(project);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
