@@ -49,6 +49,8 @@ public class DonationService {
         User user = userService.findByID(userId);
         Project project = projectService.findByID(projectId);
 
+        project.getUsers().add(user);
+
         Donation newDonation = null;
         try {
             newDonation = new Donation(
@@ -59,6 +61,7 @@ public class DonationService {
                     project);
             newDonation.calculateUserPoints();
             project.addFunds(donation.getAmount());
+
         } catch (NullPointerException ex) {
             throw BadRequestException.createWith("JSON bad request or missing field.");
         } catch (IntegerMustBePositive ex) {

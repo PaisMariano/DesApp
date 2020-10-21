@@ -23,6 +23,8 @@ public class ProjectService {
     private LocationService locationService;
     @Autowired
     private ProjectStateService projectStateService;
+    @Autowired
+    private ArsatHandler arsatHandler;
 
     @Transactional
     public Project save(Project project) {
@@ -114,5 +116,9 @@ public class ProjectService {
         } catch (IntegerMustBePositive ex) {
             throw BadRequestException.createWith(ex.getMessage());
         }
+    }
+
+    public List<ArsatLocation> getAllArsatLocations() {
+        return arsatHandler.getLocations();
     }
 }

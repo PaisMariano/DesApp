@@ -7,11 +7,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.builders.DonationBuilder;
-import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
-import unq.edu.tpi.desapp.model.exceptions.*;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
@@ -49,6 +46,27 @@ public class InitServiceInMemory {
         }
     }
 
+    private void fireInitialDataUser() throws Exception {
+        userService.createUser(new User(
+                "Mariano",
+                "paismariano@gmail.com",
+                "asdf",
+                "kvc4",
+                new ArrayList<>()));
+        userService.createUser(new User(
+                "Federico",
+                "fedecame@gmail.com",
+                "asdf",
+                "coloApagaVentilador",
+                new ArrayList<>()));
+        userService.createUser(new User(
+                "Roberto",
+                "robertoasd@gmail.com",
+                "fasdf",
+                "rober123",
+                new ArrayList<>()));
+    }
+
     private void fireInitialDataProjectState() {
         ProjectState planned = new Planned();
         planned.setId(1);
@@ -63,35 +81,80 @@ public class InitServiceInMemory {
         projectStateService.save(suspended);
     }
 
-    private void fireInitialDataProject() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage {
-        Project project1 = ProjectBuilder.aProject()
-                .withProjectState(projectStateService.findByID(1))
-                .withLocation(new Location("Pepe","hola",2000))
-                .build();
-        project1.addParticipant(userService.findAll().get(0));
-        Project project2 = ProjectBuilder.aProject()
-                .withProjectState(projectStateService.findByID(1))
-                .withLocation(new Location("Pepe2","hola",2000))
-                .build();
+    private void fireInitialDataProject() throws Exception {
+        projectService.createProject(new Project(
+                "Proyecto Bernal",
+                10000,
+                75.0f,
+                LocalDate.now(),
+                LocalDate.of(2022, 12, 22),
+                new Location("Bernal","Buenos Aires",57589),
+                projectStateService.findByID(1)));
+        projectService.createProject(new Project(
+                "Proyecto Castelar",
+                1000,
+                60.0f,
+                LocalDate.now(),
+                LocalDate.of(2022, 12, 10),
+                new Location("Castelar","Buenos Aires",65841),
+                projectStateService.findByID(1)));
+        projectService.createProject(new Project(
+                "Proyecto Tigre",
+                5000,
+                65.0f,
+                LocalDate.now(),
+                LocalDate.of(2022, 12, 22),
+                new Location("Tigre","Buenos Aires",75241),
+                projectStateService.findByID(1)));
 
-        projectService.save(project1);
-        projectService.save(project2);
     }
 
-    private void fireInitialDataUser() throws BadEmailAddressException, BadRequestException, ElementAlreadyExists {
-        userService.createUser(new User(
-                "Mariano",
-                "paismariano@gmail.com",
-                "sinPass",
-                "noNickname",
-                new ArrayList<>()));
+    private void fireInitialDataDonation() throws Exception {
+        Donation donacion1Usuario1 = DonationBuilder.aDonation()
+                .withAmount(10000)
+                .withComment("Donacion!!!")
+                .withUser(userService.findByID(1))
+                .withProject(projectService.findByID(4))
+                .build();
+        Donation donacion2Usuario1 = DonationBuilder.aDonation()
+                .withAmount(1000)
+                .withComment("Donacion normal!")
+                .withUser(userService.findByID(1))
+                .withProject(projectService.findByID(4))
+                .build();
+        Donation donacion3Usuario1 = DonationBuilder.aDonation()
+                .withAmount(50)
+                .withComment("Donacioncita!!!")
+                .withUser(userService.findByID(1))
+                .withProject(projectService.findByID(4))
+                .build();
+
+        Donation donacion1Usuario2 = DonationBuilder.aDonation()
+                .withAmount(500)
+                .withComment("Done lo que pude!")
+                .withUser(userService.findByID(2))
+                .withProject(projectService.findByID(4))
+                .build();
+        Donation donacion2Usuario2 = DonationBuilder.aDonation()
+                .withAmount(5000)
+                .withComment("Donacion Copada!!!")
+                .withUser(userService.findByID(2))
+                .withProject(projectService.findByID(6))
+                .build();
+
+        Donation donacion1Usuario3 = DonationBuilder.aDonation()
+                .withAmount(100000)
+                .withComment("Super Donacion!!!")
+                .withUser(userService.findByID(3))
+                .withProject(projectService.findByID(8))
+                .build();
+
+        donationService.save(donacion1Usuario1);
+        donationService.save(donacion2Usuario1);
+        donationService.save(donacion3Usuario1);
+        donationService.save(donacion1Usuario2);
+        donationService.save(donacion2Usuario2);
+        donationService.save(donacion1Usuario3);
     }
 
-    private void fireInitialDataDonation() throws EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, InvalidMinClosePercentage, BadEmailAddressException {
-        Donation donation = DonationBuilder.aDonation()
-                .withProject(projectService.findAllProjects().get(0))
-                .withUser(userService.findAll().get(0))
-                .build();
-        donationService.save(donation);
-    }
 }

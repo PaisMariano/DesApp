@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import unq.edu.tpi.desapp.model.ArsatLocation;
 import unq.edu.tpi.desapp.model.Location;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
@@ -73,6 +74,9 @@ public class ProjectController {
     public List<Location> allLocations() {
         return projectService.findAllLocations();
     }
+
+    @GetMapping("/locations/arsat")
+    public List<ArsatLocation> allArsatLocations() { return projectService.getAllArsatLocations(); }
 
     @PutMapping("/locations/{id}")
     public ResponseEntity<String> updateLocation(
