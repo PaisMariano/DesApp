@@ -9,7 +9,9 @@ import unq.edu.tpi.desapp.repositories.ProjectRepository;
 import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +25,10 @@ public class ProjectService {
     private LocationService locationService;
     @Autowired
     private ProjectStateService projectStateService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DonationService donationService;
     @Autowired
     private ArsatHandler arsatHandler;
 
@@ -121,4 +127,22 @@ public class ProjectService {
     public List<ArsatLocation> getAllArsatLocations() {
         return arsatHandler.getLocations();
     }
+
+    public void createDonation(Integer projectId, Integer userId, Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
+        User user = userService.findByID(userId);
+        Project project = findByID(projectId);
+        Donation newDonation = null;
+        try {
+            newDonation = new Donation(donation.getAmount(), donation.getComment(), LocalDate.now());
+            donationService.save(newDonation);
+            project.donate(newDonation, user);
+
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
+        } catch (IntegerMustBePositive | EndDateMustBeAfterStartDate | InvalidMinClosePercentage | InvalidFactor ex) {
+            throw BadRequestException.createWith(ex.getMessage());
+        }
+        save(project);
+    }
+
 }

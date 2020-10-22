@@ -45,28 +45,4 @@ public class DonationService {
         return this.donationRepository.findAll();
     }
 
-    public void createDonation(Integer projectId, Integer userId, Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
-        User user = userService.findByID(userId);
-        Project project = projectService.findByID(projectId);
-
-        project.getUsers().add(user);
-
-        Donation newDonation = null;
-        try {
-            newDonation = new Donation(
-                    donation.getAmount(),
-                    donation.getComment(),
-                    donation.getDate(),
-                    user,
-                    project);
-            newDonation.calculateUserPoints();
-            project.addFunds(donation.getAmount());
-
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (IntegerMustBePositive ex) {
-            throw BadRequestException.createWith(ex.getMessage());
-        }
-        save(newDonation);
-    }
 }

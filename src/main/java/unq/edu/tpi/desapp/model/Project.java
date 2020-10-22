@@ -8,10 +8,7 @@ import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "project")
@@ -39,7 +36,7 @@ public class Project {
     private List<Donation> donations;
 
     @ManyToMany
-    private Collection<User> users;
+    private Set<User> users;
 
     public Project() {super();}
 
@@ -113,7 +110,7 @@ public class Project {
         return users;
     }
 
-    public void setUsers(Collection<User> participants) {
+    public void setUsers(Set<User> participants) {
         this.users = participants;
     }
 
@@ -218,8 +215,10 @@ public class Project {
         return maxFundsRequired() * getMinClosePercentage() / 100;
     }
 
-    public void donate(Integer amount, String comment, User user) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
-        this.getProjectState().donate(amount, comment, user, this);
+    public void donate(Donation donation, User user) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+        donation.setProject(this);
+        donation.setUser(user);
+        this.getProjectState().donate(donation, user, this);
     }
 
     public void completeProject() {

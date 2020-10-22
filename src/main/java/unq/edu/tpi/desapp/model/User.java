@@ -1,6 +1,7 @@
 package unq.edu.tpi.desapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Proxy;
 import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 @Entity
 @Table(name = "user")
 @Proxy(lazy = false)
+@DynamicUpdate
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

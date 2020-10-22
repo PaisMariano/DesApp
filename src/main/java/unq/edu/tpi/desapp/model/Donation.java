@@ -30,6 +30,16 @@ public class Donation implements Serializable {
 
     public Donation() {super();}
 
+    public Donation(Integer amount, String comment, LocalDate date) throws IntegerMustBePositive {
+        if (amount < 0) {
+            throw new IntegerMustBePositive();
+        }
+
+        this.amount = amount;
+        this.comment = comment;
+        this.date = date;
+    }
+
     public Donation(Integer amount, String comment, LocalDate date, User user, Project project) throws IntegerMustBePositive {
         if (amount < 0) {
             throw new IntegerMustBePositive();

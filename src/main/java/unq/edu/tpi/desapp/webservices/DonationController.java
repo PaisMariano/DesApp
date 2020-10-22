@@ -30,14 +30,4 @@ public class DonationController {
         return donationService.findByID(id);
     }
 
-    @PostMapping("/donations/project/{projectId}/user/{userId}")
-    public ResponseEntity<String> createDonation(
-            @PathVariable("projectId") Integer projectId,
-            @PathVariable("userId") Integer userId,
-            @RequestBody Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
-
-        donationService.createDonation(projectId, userId, donation);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Created");
-    }
 }

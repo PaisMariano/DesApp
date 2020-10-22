@@ -28,14 +28,13 @@ public class Planned extends ProjectState {
     }
 
     @Override
-    public void donate(Integer amount, String comment, User user, Project project) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
-        if (amount < 0) {
+    public void donate(Donation donation, User user, Project project) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+        if (donation.getAmount() < 0) {
             throw new IntegerMustBePositive();
         }
-        Donation newDonation = new Donation(amount, comment, LocalDate.now(), user, project);
-        project.addDonation(newDonation);
-        user.addPoints(newDonation.calculatePoints());
+        project.addDonation(donation);
+        user.addPoints(donation.calculatePoints());
         project.addParticipant(user);
-        project.addFunds(amount);
+        project.addFunds(donation.getAmount());
     }
 }

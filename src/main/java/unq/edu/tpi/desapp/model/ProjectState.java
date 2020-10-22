@@ -68,7 +68,7 @@ public abstract class ProjectState {
     public void complete(Project aProject) {
         // reusable no behaviour method
     }
-    public void donate(Integer amount, String comment, User user, Project project) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+    public void donate(Donation donation, User user, Project project) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
         // reusable no behaviour method
     }
 }

@@ -6,14 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import unq.edu.tpi.desapp.model.ArsatLocation;
-import unq.edu.tpi.desapp.model.Location;
-import unq.edu.tpi.desapp.model.Project;
-import unq.edu.tpi.desapp.model.User;
+import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.services.ProjectService;
 import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -85,5 +83,18 @@ public class ProjectController {
 
         projectService.updateLocation(id, location);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
+    }
+
+    //DONATION
+
+    @PostMapping("/donations/project/{projectId}/user/{userId}")
+    public ResponseEntity<String> createDonation(
+            @PathVariable("projectId") Integer projectId,
+            @PathVariable("userId") Integer userId,
+            @RequestBody Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
+
+        projectService.createDonation(projectId, userId, donation);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created");
     }
 }
