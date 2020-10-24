@@ -2,15 +2,10 @@ package unq.edu.tpi.desapp.webservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.services.DonationService;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.List;
 

@@ -4,14 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.Donation;
-import unq.edu.tpi.desapp.model.Project;
-import unq.edu.tpi.desapp.model.User;
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.repositories.DonationRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
