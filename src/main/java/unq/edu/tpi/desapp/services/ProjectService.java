@@ -158,12 +158,13 @@ public class ProjectService {
         return arsatHandler.getLocations();
     }
 
+    @Transactional
     public void createDonation(Integer projectId, Integer userId, Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
         User user = userService.findByID(userId);
         Project project = findByID(projectId);
         Donation newDonation = null;
         try {
-            newDonation = new Donation(donation.getAmount(), donation.getComment(), LocalDate.now());
+            newDonation = new Donation(donation.getAmount(), donation.getComment(), LocalDate.now(), user.getNickname());
             donationService.save(newDonation);
             project.donate(newDonation, user);
 

@@ -60,7 +60,7 @@ public class ProjectTest {
     public void missingPercentageToCompleteIsDirectlyRelatedToMinClosePercentage() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation = new Donation(250, "Donating 25% of the total $1000", LocalDate.now());
+        Donation sampleDonation = new Donation(250, "Donating 25% of the total $1000", LocalDate.now(), "kvc4");
         sampleProject.donate(sampleDonation, sampleUser);
         assertEquals((Float)75.0f, sampleProject.missingPercentageToComplete());
         Project projectWithHalfMinPercentage = ProjectBuilder.aProject().withMinClosePercentage(50.0f).build();
@@ -95,7 +95,7 @@ public class ProjectTest {
         Project sampleProjectWithMinClosePercentOf80 = ProjectBuilder.aProject().withMinClosePercentage(80.0f).build();
         assertEquals((Float)0.0f, sampleProjectWithMinClosePercentOf80.accumulatedValuePercentage());
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation = new Donation(500, "50% donation ignoring minimum close percentage", LocalDate.now());
+        Donation sampleDonation = new Donation(500, "50% donation ignoring minimum close percentage", LocalDate.now(), "kvc4");
         sampleProjectWithMinClosePercentOf80.donate(sampleDonation, sampleUser);
         assertEquals((Float)50.0f, sampleProjectWithMinClosePercentOf80.accumulatedValuePercentage());
     }
@@ -104,7 +104,7 @@ public class ProjectTest {
     public void cantDonateNegativeAmount() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation = new Donation(-16, "A negative donation", LocalDate.now());
+        Donation sampleDonation = new Donation(-16, "A negative donation", LocalDate.now(), "kvc4");
         sampleProject.donate(sampleDonation, sampleUser);
     }
 
@@ -112,8 +112,8 @@ public class ProjectTest {
     public void donate100Currency2TimesToRaiseFundsAppropriately() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now());
-        Donation sampleDonation2 = new Donation(100, "My second donation", LocalDate.now());
+        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation2 = new Donation(100, "My second donation", LocalDate.now(), "kvc4");
         sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer)100, sampleProject.getRaisedFunds());
         sampleProject.donate(sampleDonation2, sampleUser);
@@ -125,9 +125,9 @@ public class ProjectTest {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
         assertEquals((Integer)0, sampleProject.participantsAmount());
-        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now());
-        Donation sampleDonation2 = new Donation(150, "My second donation", LocalDate.now());
-        Donation sampleDonation3 = new Donation(42, "My second donation", LocalDate.now());
+        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation2 = new Donation(150, "My second donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation3 = new Donation(42, "My second donation", LocalDate.now(), "kvc4");
         sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer)1, sampleProject.participantsAmount());
         sampleProject.donate(sampleDonation2, sampleUser);
@@ -158,7 +158,7 @@ public class ProjectTest {
         assertEquals((Float)100.0f, sampleProject.missingPercentageToComplete());
         sampleProject.completeProject();
         assertEquals("En Planificacion", sampleProject.getState());
-        Donation sampleDonation1 = new Donation(1000, "full clear percentage donation", LocalDate.now());
+        Donation sampleDonation1 = new Donation(1000, "full clear percentage donation", LocalDate.now(), "kvc4");
         sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Float)0.0f, sampleProject.missingPercentageToComplete());
         sampleProject.completeProject();
@@ -170,7 +170,7 @@ public class ProjectTest {
         Project connectedProject = ProjectBuilder.aProject().build();
         connectedProject.setProjectState(new Connected());
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation1 = new Donation(15000, "This donation wont count", LocalDate.now());
+        Donation sampleDonation1 = new Donation(15000, "This donation wont count", LocalDate.now(), "kvc4");
         connectedProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer) 0, connectedProject.getRaisedFunds());
         assertEquals((Integer) 0, connectedProject.participantsAmount());
@@ -181,7 +181,7 @@ public class ProjectTest {
         Project suspendedProject = ProjectBuilder.aProject().build();
         suspendedProject.setProjectState(new Suspended());
         User sampleUser = UserBuilder.aUser().build();
-        Donation sampleDonation1 = new Donation(3333, "This donation wont count", LocalDate.now());
+        Donation sampleDonation1 = new Donation(3333, "This donation wont count", LocalDate.now(), "kvc4");
         suspendedProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer) 0, suspendedProject.getRaisedFunds());
         assertEquals((Integer) 0, suspendedProject.participantsAmount());
