@@ -2,8 +2,6 @@ language: java
 # use Java 14
 jdk: openjdk14
 
-dist: trusty
-
 # see https://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure
 sudo: false
 
@@ -17,7 +15,7 @@ cache:
 #  - rm -rf $HOME/.m2/repository/com/autentia/traviscodacy
 
 before_install:
-  - sudo apt-get install jq
+  - sudo apt-get install -y jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 
 after_success:
