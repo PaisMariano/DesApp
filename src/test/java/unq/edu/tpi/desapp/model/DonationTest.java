@@ -5,10 +5,7 @@ import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.LocationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
-import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
-import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
-import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+import unq.edu.tpi.desapp.model.exceptions.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,7 +45,7 @@ public class DonationTest {
             .withAmount(1000)
             .build();
 
-    public DonationTest() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
+    public DonationTest() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
     }
 
     @Test

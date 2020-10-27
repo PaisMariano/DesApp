@@ -3,10 +3,7 @@ package unq.edu.tpi.desapp.model.builders;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.model.Project;
 import unq.edu.tpi.desapp.model.User;
-import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
-import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
-import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+import unq.edu.tpi.desapp.model.exceptions.*;
 
 import java.time.LocalDate;
 
@@ -17,14 +14,14 @@ public class DonationBuilder {
     private User user = UserBuilder.aUser().build();
     private Project project = ProjectBuilder.aProject().build();
 
-    public DonationBuilder() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
+    public DonationBuilder() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
     }
 
-    public static DonationBuilder aDonation() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive {
+    public static DonationBuilder aDonation() throws EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         return new DonationBuilder();
     }
 
-    public Donation build() {
+    public Donation build() throws IntegerMustBePositive {
         return new Donation(amount, comment, date, user, project);
     }
 

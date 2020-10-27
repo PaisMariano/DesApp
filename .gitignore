@@ -35,3 +35,6 @@ out/
 
 ### Codacy coverage ###
 .codacy-coverage/
+
+###log4j###
+logs/

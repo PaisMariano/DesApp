@@ -5,10 +5,7 @@ import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 import unq.edu.tpi.desapp.model.builders.LocationBuilder;
 import unq.edu.tpi.desapp.model.builders.ProjectBuilder;
 import unq.edu.tpi.desapp.model.builders.UserBuilder;
-import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
-import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
-import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
-import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
+import unq.edu.tpi.desapp.model.exceptions.*;
 
 import java.time.LocalDate;
 
@@ -60,18 +57,19 @@ public class ProjectTest {
     }
 
     @Test
-    public void missingPercentageToCompleteIsDirectlyRelatedToMinClosePercentage() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive {
+    public void missingPercentageToCompleteIsDirectlyRelatedToMinClosePercentage() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        sampleProject.donate(250, "Donating 25% of the total $1000", sampleUser);
+        Donation sampleDonation = new Donation(250, "Donating 25% of the total $1000", LocalDate.now(), "kvc4");
+        sampleProject.donate(sampleDonation, sampleUser);
         assertEquals((Float)75.0f, sampleProject.missingPercentageToComplete());
         Project projectWithHalfMinPercentage = ProjectBuilder.aProject().withMinClosePercentage(50.0f).build();
-        projectWithHalfMinPercentage.donate(250, "Donating 25% of the total $1000", sampleUser);
+        projectWithHalfMinPercentage.donate(sampleDonation, sampleUser);
         assertEquals((Float)50.0f, projectWithHalfMinPercentage.missingPercentageToComplete());
     }
 
     @Test
-    public void addingParticipantsIncreaseParticipantsAmount() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive {
+    public void addingParticipantsIncreaseParticipantsAmount() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         assertEquals((Integer)0, sampleProject.participantsAmount());
         User sampleUser1 = UserBuilder.aUser().build();
@@ -83,7 +81,7 @@ public class ProjectTest {
     }
 
     @Test
-    public void participantsAmountIs1ForEveryUniqueParticipant() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive {
+    public void participantsAmountIs1ForEveryUniqueParticipant() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
         sampleProject.addParticipant(sampleUser);
@@ -93,42 +91,49 @@ public class ProjectTest {
     }
 
     @Test
-    public void accumulatedValuePercentageIgnoresMinClosePercentage() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive {
+    public void accumulatedValuePercentageIgnoresMinClosePercentage() throws InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, IntegerMustBePositive, BadEmailAddressException {
         Project sampleProjectWithMinClosePercentOf80 = ProjectBuilder.aProject().withMinClosePercentage(80.0f).build();
         assertEquals((Float)0.0f, sampleProjectWithMinClosePercentOf80.accumulatedValuePercentage());
         User sampleUser = UserBuilder.aUser().build();
-        sampleProjectWithMinClosePercentOf80.donate(500, "50% donation ignoring minimum close percentage", sampleUser);
+        Donation sampleDonation = new Donation(500, "50% donation ignoring minimum close percentage", LocalDate.now(), "kvc4");
+        sampleProjectWithMinClosePercentOf80.donate(sampleDonation, sampleUser);
         assertEquals((Float)50.0f, sampleProjectWithMinClosePercentOf80.accumulatedValuePercentage());
     }
 
     @Test(expected = IntegerMustBePositive.class)
-    public void cantDonateNegativeAmount() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+    public void cantDonateNegativeAmount() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        sampleProject.donate(-16, "A negative donation", sampleUser);
+        Donation sampleDonation = new Donation(-16, "A negative donation", LocalDate.now(), "kvc4");
+        sampleProject.donate(sampleDonation, sampleUser);
     }
 
     @Test
-    public void donate100Currency2TimesToRaiseFundsAppropriately() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+    public void donate100Currency2TimesToRaiseFundsAppropriately() throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
-        sampleProject.donate(100, "My first donation", sampleUser);
+        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation2 = new Donation(100, "My second donation", LocalDate.now(), "kvc4");
+        sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer)100, sampleProject.getRaisedFunds());
-        sampleProject.donate(100, "My second donation", sampleUser);
+        sampleProject.donate(sampleDonation2, sampleUser);
         assertEquals((Integer)200, sampleProject.getRaisedFunds());
     }
 
     @Test
-    public void donatingAddsParticipantsToProject() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
+    public void donatingAddsParticipantsToProject() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         User sampleUser = UserBuilder.aUser().build();
         assertEquals((Integer)0, sampleProject.participantsAmount());
-        sampleProject.donate(100, "My first donation", sampleUser);
+        Donation sampleDonation1 = new Donation(100, "My first donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation2 = new Donation(150, "My second donation", LocalDate.now(), "kvc4");
+        Donation sampleDonation3 = new Donation(42, "My second donation", LocalDate.now(), "kvc4");
+        sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer)1, sampleProject.participantsAmount());
-        sampleProject.donate(150, "My second donation", sampleUser);
+        sampleProject.donate(sampleDonation2, sampleUser);
         assertEquals((Integer)1, sampleProject.participantsAmount());
         User sampleUser2 = UserBuilder.aUser().build();
-        sampleProject.donate(42, "My second donation", sampleUser2);
+        sampleProject.donate(sampleDonation3, sampleUser2);
         assertEquals((Integer)2, sampleProject.participantsAmount());
     }
 
@@ -147,40 +152,43 @@ public class ProjectTest {
     }
 
     @Test
-    public void projectsChangeToConnectedStateOnlyIfTriedToCompleteWithLessThanOrEqualTo0PercentFundsMissingAndBeforeEndDate() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
+    public void projectsChangeToConnectedStateOnlyIfTriedToCompleteWithLessThanOrEqualTo0PercentFundsMissingAndBeforeEndDate() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().withEndDate(LocalDate.of(2055, 12, 22)).build();
         User sampleUser = UserBuilder.aUser().build();
         assertEquals((Float)100.0f, sampleProject.missingPercentageToComplete());
         sampleProject.completeProject();
         assertEquals("En Planificacion", sampleProject.getState());
-        sampleProject.donate(1000, "full clear percentage donation", sampleUser);
+        Donation sampleDonation1 = new Donation(1000, "full clear percentage donation", LocalDate.now(), "kvc4");
+        sampleProject.donate(sampleDonation1, sampleUser);
         assertEquals((Float)0.0f, sampleProject.missingPercentageToComplete());
         sampleProject.completeProject();
         assertEquals("Conectado", sampleProject.getState());
     }
 
     @Test
-    public void connectedProjectsDoNothingWhenTriedToDonateToThem() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
+    public void connectedProjectsDoNothingWhenTriedToDonateToThem() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, BadEmailAddressException {
         Project connectedProject = ProjectBuilder.aProject().build();
         connectedProject.setProjectState(new Connected());
         User sampleUser = UserBuilder.aUser().build();
-        connectedProject.donate(15000, "This donation wont count", sampleUser);
+        Donation sampleDonation1 = new Donation(15000, "This donation wont count", LocalDate.now(), "kvc4");
+        connectedProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer) 0, connectedProject.getRaisedFunds());
         assertEquals((Integer) 0, connectedProject.participantsAmount());
     }
 
     @Test
-    public void suspendedProjectsDoNothingWhenTriedToDonateToThem() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
+    public void suspendedProjectsDoNothingWhenTriedToDonateToThem() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, BadEmailAddressException {
         Project suspendedProject = ProjectBuilder.aProject().build();
         suspendedProject.setProjectState(new Suspended());
         User sampleUser = UserBuilder.aUser().build();
-        suspendedProject.donate(3333, "This donation wont count", sampleUser);
+        Donation sampleDonation1 = new Donation(3333, "This donation wont count", LocalDate.now(), "kvc4");
+        suspendedProject.donate(sampleDonation1, sampleUser);
         assertEquals((Integer) 0, suspendedProject.getRaisedFunds());
         assertEquals((Integer) 0, suspendedProject.participantsAmount());
     }
 
     @Test
-    public void gettersAndSettersForCoverage() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
+    public void gettersAndSettersForCoverage() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor, BadEmailAddressException {
         Project sampleProject = ProjectBuilder.aProject().build();
         assertEquals(0, sampleProject.getDonations().size());
         sampleProject.addDonation(DonationBuilder.aDonation().build());
@@ -192,33 +200,33 @@ public class ProjectTest {
         sampleProject.setStartDate(LocalDate.of(2020,1,27));
         assertEquals(LocalDate.of(2020,1,27), sampleProject.getStartDate());
 
-        sampleProject.setEndDate(LocalDate.of(2022, 8, 17));
+        sampleProject.setEndDateWithException(LocalDate.of(2022, 8, 17));
         assertEquals(LocalDate.of(2022, 8, 17), sampleProject.getEndDate());
 
-        sampleProject.setRaisedFunds(666);
+        sampleProject.setRaisedFundsWithException(666);
         assertEquals((Integer) 666, sampleProject.getRaisedFunds());
 
         Location sampleLocation = LocationBuilder.aLocation().build();
         sampleProject.setLocation(sampleLocation);
         assertEquals(sampleLocation, sampleProject.getLocation());
 
-        sampleProject.setFactor(5555);
+        sampleProject.setFactorWithException(5555);
         assertEquals((Integer) 5555, sampleProject.getFactor());
 
-        sampleProject.setMinClosePercentage(88.0f);
+        sampleProject.setMinClosePercentageWithException(88.0f);
         assertEquals((Float) 88.0f, sampleProject.getMinClosePercentage());
     }
 
     @Test(expected = EndDateMustBeAfterStartDate.class)
     public void cantSetEndDateBeforeStartDate() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().withStartDate(LocalDate.of(2020, 4, 19)).withEndDate(LocalDate.of(2222, 12, 22)).build();
-        sampleProject.setEndDate(LocalDate.of(2019, 7, 15));
+        sampleProject.setEndDateWithException(LocalDate.of(2019, 7, 15));
     }
 
     @Test(expected = IntegerMustBePositive.class)
     public void cantSetNegativeRaisedFunds() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setRaisedFunds(-33);
+        sampleProject.setRaisedFundsWithException(-33);
     }
 
     @Test(expected = IntegerMustBePositive.class)
@@ -230,24 +238,24 @@ public class ProjectTest {
     @Test(expected = InvalidFactor.class)
     public void cantSetNegativeFactor() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setFactor(-11);
+        sampleProject.setFactorWithException(-11);
     }
 
     @Test(expected = InvalidFactor.class)
     public void cantSetFactorHigherThan100000() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setFactor(111111);
+        sampleProject.setFactorWithException(111111);
     }
 
     @Test(expected = InvalidMinClosePercentage.class)
     public void cantSetMinClosePercentageLowerThan50Percent() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setMinClosePercentage(44.4f);
+        sampleProject.setMinClosePercentageWithException(44.4f);
     }
 
     @Test(expected = InvalidMinClosePercentage.class)
     public void cantSetMinClosePercentageHigherThan100Percent() throws IntegerMustBePositive, InvalidMinClosePercentage, EndDateMustBeAfterStartDate, InvalidFactor {
         Project sampleProject = ProjectBuilder.aProject().build();
-        sampleProject.setMinClosePercentage(115.5f);
+        sampleProject.setMinClosePercentageWithException(115.5f);
     }
 }
