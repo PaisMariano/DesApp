@@ -17,6 +17,7 @@ public class Donation implements Serializable {
     private Integer amount;
     private String comment;
     private LocalDate date;
+    private String username;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
@@ -38,6 +39,7 @@ public class Donation implements Serializable {
         this.amount = amount;
         this.comment = comment;
         this.date = date;
+        this.username = user.getNickname();
     }
 
     public Donation(Integer amount, String comment, LocalDate date, User user, Project project) throws IntegerMustBePositive {
@@ -50,6 +52,7 @@ public class Donation implements Serializable {
         this.user = user;
         this.project = project;
         this.date = date;
+        this.username = user.getNickname();
     }
 
     public Integer getId() {
@@ -98,6 +101,14 @@ public class Donation implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Integer calculatePoints() {

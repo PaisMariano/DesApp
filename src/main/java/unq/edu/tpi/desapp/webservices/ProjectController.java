@@ -85,6 +85,11 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
+    @GetMapping("/locations/leastdonated")
+    public List<Location> dailyLeastTenDonatedLocations() {
+        return projectService.dailyLeastTenDonatedLocations();
+    }
+
     //DONATION
 
     @PostMapping("/donations/project/{projectId}/user/{userId}")
@@ -96,5 +101,10 @@ public class ProjectController {
         projectService.createDonation(projectId, userId, donation);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
+    }
+
+    @GetMapping("/donations/topten")
+    public List<Donation> dailyTopTenDonations(){
+        return projectService.dailyTopTenDonations();
     }
 }

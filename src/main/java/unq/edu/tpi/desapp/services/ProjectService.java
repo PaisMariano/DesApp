@@ -12,9 +12,10 @@ import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
 import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
 
 @Service
 public class ProjectService {
@@ -104,6 +105,35 @@ public class ProjectService {
         return findByID(id).getUsers();
     }
 
+    public List<Location> dailyLeastTenDonatedLocations() {
+        List<Project> projects = this.findAllProjects();
+
+        List<Donation> lastDonations = new ArrayList<>();
+
+        projects.stream().forEach(elem -> {
+            if (elem.getDonations().size() > 0) {
+                lastDonations.add(getLastDonation(elem));
+            }
+        });
+
+        lastDonations.stream()
+                .sorted(comparing(Donation::getDate))
+                .limit(10)
+                .collect(Collectors.toList());
+
+        return lastDonations.stream()
+                .map(elem -> elem.getProject().getLocation())
+                .collect(Collectors.toList());
+    }
+
+    private Donation getLastDonation(Project project) {
+        return project.getDonations()
+                .stream()
+                .sorted(comparing(Donation::getDate).reversed())
+                .collect(Collectors.toList())
+                .get(0);
+    }
+
     public void updateProjectService(Integer projectId, Integer projectStateId) throws ProjectNotFoundException {
         Project newProject = findByID(projectId);
         ProjectState newProjectState = projectStateService.findByID(projectStateId);
@@ -144,5 +174,15 @@ public class ProjectService {
         }
         save(project);
     }
+    public List<Donation> dailyTopTenDonations() {
+        List<Donation> donations = donationService.findAll()
+                .stream()
+                .filter(elem -> elem.getDate().equals(LocalDate.now()))
+                .collect(Collectors.toList());
 
+        return donations.stream()
+                .sorted(comparing(Donation::getAmount).reversed())
+                .limit(10)
+                .collect(Collectors.toList());
+    }
 }
