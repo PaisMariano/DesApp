@@ -1,4 +1,4 @@
-package unq.edu.tpi.desapp.webservices;
+package unq.edu.tpi.desapp.helpers;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

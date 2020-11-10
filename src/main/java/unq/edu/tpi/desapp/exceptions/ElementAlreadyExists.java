@@ -1,4 +1,4 @@
-package unq.edu.tpi.desapp.webservices.exceptions;
+package unq.edu.tpi.desapp.exceptions;
 
 public class ElementAlreadyExists extends Exception {
     private String err;

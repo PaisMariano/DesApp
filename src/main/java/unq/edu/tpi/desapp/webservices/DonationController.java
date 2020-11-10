@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.services.DonationService;
-import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
+import unq.edu.tpi.desapp.exceptions.DonationNotFoundException;
 
 import java.util.List;
 

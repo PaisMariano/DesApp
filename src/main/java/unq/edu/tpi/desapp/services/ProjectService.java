@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.repositories.ProjectRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
+import unq.edu.tpi.desapp.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -31,7 +31,7 @@ public class ProjectService {
     @Autowired
     private DonationService donationService;
     @Autowired
-    private ArsatHandler arsatHandler;
+    private ArsatService arsatService;
 
     @Transactional
     public Project save(Project project) {
@@ -155,7 +155,7 @@ public class ProjectService {
     }
 
     public List<ArsatLocation> getAllArsatLocations() {
-        return arsatHandler.getLocations();
+        return arsatService.getLocations();
     }
 
     @Transactional

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ArsatHandler {
+public class ArsatService {
 
     public List<ArsatLocation> getLocations() {
         return requestLocations();

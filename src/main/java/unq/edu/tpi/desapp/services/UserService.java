@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.repositories.UserRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
+import unq.edu.tpi.desapp.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

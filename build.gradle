@@ -33,6 +33,10 @@ dependencies {
 
     //H2
     runtimeOnly 'com.h2database:h2'
+
+    //ArchUnit
+    testImplementation 'com.tngtech.archunit:archunit:0.14.1'
+
 }
 
 bootJar {

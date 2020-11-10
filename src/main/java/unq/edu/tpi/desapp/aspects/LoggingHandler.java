@@ -19,7 +19,7 @@ public class LoggingHandler {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    /// CUSTOM  POINTCUT////
+    /// CUSTOM  POINTCUT ///
     @Pointcut("execution(* unq.edu.tpi.desapp.webservices.*.*(..))")
     public void methodsStarterServicePointcut() {
         //No behaviour method

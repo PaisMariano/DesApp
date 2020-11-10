@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.*;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.services.ProjectService;
-import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
+import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +29,6 @@ public class ProjectController {
     }
 
     @PostMapping("/projects")
-    @Transactional
     public ResponseEntity<String> createProject(@RequestBody Project project) throws BadRequestException, ElementAlreadyExists{
         projectService.createProject(project);
 
@@ -43,7 +41,6 @@ public class ProjectController {
     }
 
     @PutMapping("/projects/{id}")
-    @Transactional
     public ResponseEntity<String> updateProject(
             @RequestBody Project project,
             @PathVariable("id") Integer id) throws ProjectNotFoundException, BadRequestException {

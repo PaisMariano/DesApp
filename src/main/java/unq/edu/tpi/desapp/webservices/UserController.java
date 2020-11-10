@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.services.UserService;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
+import unq.edu.tpi.desapp.exceptions.BadRequestException;
+import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.List;
 

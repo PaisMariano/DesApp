@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.repositories.DonationRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
+import unq.edu.tpi.desapp.exceptions.DonationNotFoundException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
