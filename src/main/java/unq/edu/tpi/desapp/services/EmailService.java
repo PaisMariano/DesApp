@@ -1,8 +1,7 @@
 package unq.edu.tpi.desapp.services;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.mail.MessagingException;
@@ -11,9 +10,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,11 +18,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import unq.edu.tpi.desapp.helpers.EmailServiceConfig;
+import unq.edu.tpi.desapp.model.User;
 
 @Service
 public class EmailService {
 
-    private static final String EMAIL_INLINEIMAGE_TEMPLATE_NAME = "html/email-inlineimage";
     private static final String EMAIL_EDITABLE_TEMPLATE_CLASSPATH_RES = "classpath:mail/editablehtml/email-editable.html";
 
     private static final String BACKGROUND_IMAGE = "mail/editablehtml/images/background.png";
@@ -44,58 +41,88 @@ public class EmailService {
     @Autowired
     private TemplateEngine htmlTemplateEngine;
 
+    @Autowired
+    private ProjectService projectService;
 
-    /*
-     * Send HTML mail with inline image
-     */
-    public void sendMailWithInline(
-            final String recipientName, final String recipientEmail, final String imageResourceName,
-            final byte[] imageBytes, final String imageContentType, final Locale locale)
-            throws MessagingException {
+    @Autowired
+    private UserService userService;
 
-        // Prepare the evaluation context
-        final Context ctx = new Context(locale);
-        ctx.setVariable("name", recipientName);
-        ctx.setVariable("subscriptionDate", new Date());
-        ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
-        ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
+    public void sendDonorsEmail(final Locale locale) {
+        List<String> donations = projectService.dailyTopTenDonations();
+        List<User> users = userService.findAll();
 
-        // Prepare message using a Spring helper
-        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-        final MimeMessageHelper message
-                = new MimeMessageHelper(mimeMessage, true /* multipart */, "UTF-8");
-        message.setSubject("Example HTML email with inline image");
-        message.setFrom("thymeleaf@example.com");
-        message.setTo(recipientEmail);
-
-        // Create the HTML body using Thymeleaf
-        final String htmlContent = this.htmlTemplateEngine.process(EMAIL_INLINEIMAGE_TEMPLATE_NAME, ctx);
-        message.setText(htmlContent, true /* isHtml */);
-
-        // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
-        final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-        message.addInline(imageResourceName, imageSource, imageContentType);
-
-        // Send mail
-        this.mailSender.send(mimeMessage);
+        try {
+            sendEditableMail(
+                    "mariano",
+                    "mariano_a_p@hotmail.com",
+                    "Mira el TOP 10 de donaciones de hoy!",
+                    donations,
+                    locale
+            );
+        } catch (MessagingException | IOException e){
+            e.printStackTrace();
+        }
+//        users.stream()
+//                .forEach(elem -> {
+//                    try {
+//                        sendEditableMail(
+//                                elem.getUsername(),
+//                                elem.getEmail(),
+//                                "Mira el TOP 10 de donaciones de hoy!",
+//                                donations,
+//                                locale
+//                                );
+//                    } catch (MessagingException | IOException e){
+//                        e.printStackTrace();
+//                    }
+//                });
     }
 
+    public void sendLocationsEmail(final Locale locale) {
+        List<String> locations = projectService.dailyLeastTenDonatedLocations();
+        List<User> users = userService.findAll();
 
-    /*
-     * Send HTML mail with inline image
-     */
+        try {
+            sendEditableMail(
+                    "mariano",
+                    "mariano_a_p@hotmail.com",
+                    "Mira el TOP 10 de locaciones con menos donaciones de hoy y empeza a donar!",
+                    locations,
+                    locale
+            );
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
+        //        users.stream()
+//                .forEach(elem -> {
+//                    try {
+//                        sendEditableMail(
+//                                elem.getUsername(),
+//                                elem.getEmail(),
+//                                "Mira el TOP 10 de locaciones con menos donaciones de hoy y empeza a donar!",
+//                                locations,
+//                                locale
+//                                );
+//                    } catch (MessagingException | IOException e){
+//                        e.printStackTrace();
+//                    }
+//                });
+    }
+
     public String getEditableMailTemplate() throws IOException {
         final Resource templateResource = this.applicationContext.getResource(EMAIL_EDITABLE_TEMPLATE_CLASSPATH_RES);
         final InputStream inputStream = templateResource.getInputStream();
         return IOUtils.toString(inputStream, EmailServiceConfig.EMAIL_TEMPLATE_ENCODING);
     }
 
-
     /*
      * Send HTML mail with inline image
      */
     public void sendEditableMail(
-            final String recipientName, final String recipientEmail, final String htmlContent,
+            final String recipientName,
+            final String recipientEmail,
+            final String subject,
+            final List<String> displayList,
             final Locale locale)
             throws MessagingException, IOException {
 
@@ -103,19 +130,18 @@ public class EmailService {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper message
                 = new MimeMessageHelper(mimeMessage, true /* multipart */, "UTF-8");
-        message.setSubject("Example editable HTML email");
-        message.setFrom("thymeleaf@example.com");
+        message.setSubject(subject);
+        message.setFrom("DESAPPUNQ@alu.unq.edu.ar");
         message.setTo(recipientEmail);
 
         // Prepare the evaluation context
         final Context ctx = new Context(locale);
         ctx.setVariable("name", recipientName);
-        ctx.setVariable("subscriptionDate", new Date());
-        ctx.setVariable("hobbies", Arrays.asList("Cinema", "Sports", "Music"));
+        ctx.setVariable("list", displayList);
 
         // Create the HTML body using Thymeleaf
-        final String output = getEditableMailTemplate();
-        message.setText(output, true /* isHtml */);
+        final String htmlContent = this.htmlTemplateEngine.process(getEditableMailTemplate(), ctx);
+        message.setText(htmlContent, true /* isHtml */);
 
         // Add the inline images, referenced from the HTML code as "cid:image-name"
         message.addInline("background", new ClassPathResource(BACKGROUND_IMAGE), PNG_MIME);
@@ -126,5 +152,4 @@ public class EmailService {
         // Send mail
         this.mailSender.send(mimeMessage);
     }
-
 }

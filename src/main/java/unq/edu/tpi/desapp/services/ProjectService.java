@@ -105,7 +105,7 @@ public class ProjectService {
         return findByID(id).getUsers();
     }
 
-    public List<Location> dailyLeastTenDonatedLocations() {
+    public List<String> dailyLeastTenDonatedLocations() {
         List<Project> projects = this.findAllProjects();
 
         List<Donation> lastDonations = new ArrayList<>();
@@ -121,8 +121,12 @@ public class ProjectService {
                 .limit(10)
                 .collect(Collectors.toList());
 
-        return lastDonations.stream()
+        List<Location> lastLocations = lastDonations.stream()
                 .map(elem -> elem.getProject().getLocation())
+                .collect(Collectors.toList());
+
+        return lastLocations.stream()
+                .map(elem -> elem.getName() + " - " +  elem.getProvince())
                 .collect(Collectors.toList());
     }
 
@@ -175,15 +179,20 @@ public class ProjectService {
         }
         save(project);
     }
-    public List<Donation> dailyTopTenDonations() {
+
+    public List<String> dailyTopTenDonations() {
         List<Donation> donations = donationService.findAll()
                 .stream()
                 .filter(elem -> elem.getDate().equals(LocalDate.now()))
                 .collect(Collectors.toList());
 
-        return donations.stream()
+        List<Donation> donationsTop10 = donations.stream()
                 .sorted(comparing(Donation::getAmount).reversed())
                 .limit(10)
+                .collect(Collectors.toList());
+
+        return donationsTop10.stream()
+                .map(elem -> elem.getUser().getNickname() + " - $ " +  elem.getAmount())
                 .collect(Collectors.toList());
     }
 }

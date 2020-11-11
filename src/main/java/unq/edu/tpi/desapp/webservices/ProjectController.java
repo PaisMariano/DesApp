@@ -83,7 +83,7 @@ public class ProjectController {
     }
 
     @GetMapping("/locations/leastdonated")
-    public List<Location> dailyLeastTenDonatedLocations() {
+    public List<String> dailyLeastTenDonatedLocations() {
         return projectService.dailyLeastTenDonatedLocations();
     }
 
@@ -101,7 +101,7 @@ public class ProjectController {
     }
 
     @GetMapping("/donations/topten")
-    public List<Donation> dailyTopTenDonations(){
+    public List<String> dailyTopTenDonations(){
         return projectService.dailyTopTenDonations();
     }
 }

@@ -14,17 +14,23 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/sendEditableMail")
+    @PostMapping("/email/donors")
     @ResponseBody
-    public String sendMailWithInline(
-            @RequestParam("recipientName") final String recipientName,
-            @RequestParam("recipientEmail") final String recipientEmail,
-            @RequestParam("body") final String body,
+    public String sendDonationsMail(
             final Locale locale)
             throws MessagingException, IOException {
 
-        this.emailService.sendEditableMail(
-                recipientName, recipientEmail, body, locale);
-        return "redirect:sent.html";
+        this.emailService.sendDonorsEmail(locale);
+        return "Email sent";
+    }
+
+    @PostMapping("/email/locations")
+    @ResponseBody
+    public String sendLocationsMail(
+            final Locale locale)
+            throws MessagingException, IOException {
+
+        this.emailService.sendLocationsEmail(locale);
+        return "Email sent";
     }
 }
