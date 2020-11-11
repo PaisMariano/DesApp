@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class BackendDesappApiApplication {
 
+
     public static void main(String[] args) {
         //    System.setProperty("server.servlet.context-path", "/unq");
         SpringApplication.run(BackendDesappApiApplication.class, args);
