@@ -15,10 +15,6 @@ public class DonationService {
 
     @Autowired
     private DonationRepository donationRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ProjectService projectService;
 
     @Transactional
     public Donation save(Donation model) {

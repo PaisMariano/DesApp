@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Order(0)
 public class LoggingHandler {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /// CUSTOM  POINTCUT ///
     @Pointcut("execution(* unq.edu.tpi.desapp.webservices.*.*(..))")

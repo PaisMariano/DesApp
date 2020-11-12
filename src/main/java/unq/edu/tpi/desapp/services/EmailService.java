@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import unq.edu.tpi.desapp.helpers.EmailServiceConfig;
-import unq.edu.tpi.desapp.model.User;
 
 @Service
 public class EmailService {
@@ -44,12 +43,12 @@ public class EmailService {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     public void sendDonorsEmail(final Locale locale) {
         List<String> donations = projectService.dailyTopTenDonations();
-        List<User> users = userService.findAll();
+//        List<User> users = userService.findAll();
 
         try {
             sendEditableMail(
@@ -80,7 +79,7 @@ public class EmailService {
 
     public void sendLocationsEmail(final Locale locale) {
         List<String> locations = projectService.dailyLeastTenDonatedLocations();
-        List<User> users = userService.findAll();
+//        List<User> users = userService.findAll();
 
         try {
             sendEditableMail(

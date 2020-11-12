@@ -23,6 +23,14 @@ public class ProjectController {
     private ProjectService projectService;
 
     //PROJECT METHODS
+    @GetMapping("/projects/page")
+    public List<Project> allProjects(
+            @RequestParam Integer from,
+            @RequestParam Integer to) throws BadRequestException {
+
+        return projectService.findAllProjectsWithIndexes(from, to);
+    }
+
     @GetMapping("/projects")
     public List<Project> allProjects() {
         return projectService.findAllProjects();

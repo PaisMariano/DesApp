@@ -13,8 +13,6 @@ import java.util.ArrayList;
 @Service
 public class InitInMemoryService {
 
-    //protected final Logger logger = LogManager.getLogger(getClass());
-
     @Value("${spring.datasource.driverClassName:NONE}")
     private String className;
 
@@ -27,20 +25,16 @@ public class InitInMemoryService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private DonationService donationService;
-
     @PostConstruct
     public void initialize() throws Exception {
         if (className.equals("org.h2.Driver")) {
-            //logger.warn("Init Data Using H2 DB");
                 //DATOS MAESTROS NECESARIOS.
                 fireInitialDataUser();
                 fireInitialDataProjectState();
                 fireInitialDataProject();
 
                 //DATOS HISTORICOS.
-                fireInitialDataDonation();
+                fireIniDataDonation();
         }
     }
 
@@ -205,7 +199,7 @@ public class InitInMemoryService {
 
     }
 
-    private void fireInitialDataDonation() throws Exception {
+    private void fireIniDataDonation() throws Exception {
         Donation donacion1Usuario1 = DonationBuilder.aDonation()
                 .withAmount(10000)
                 .withComment("Donacion!!!")
@@ -334,5 +328,4 @@ public class InitInMemoryService {
         projectService.createDonation(29, 10, donacion5Usuario10);
         projectService.createDonation(29, 10, donacion6Usuario10);
     }
-
 }

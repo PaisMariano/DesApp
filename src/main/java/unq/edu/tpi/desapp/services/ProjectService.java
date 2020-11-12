@@ -58,6 +58,17 @@ public class ProjectService {
         return findByID(id).getUsers();
     }
 
+    public List<Project> findAllProjectsWithIndexes(Integer from, Integer to) throws BadRequestException {
+        List<Project> projects = null;
+        try {
+            projects = projectRepository.findAll()
+                    .subList(from, to);
+        } catch (IndexOutOfBoundsException | IllegalArgumentException ex){
+            throw BadRequestException.createWith("Incorrect params given.");
+        }
+        return projects;
+    }
+
     public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
