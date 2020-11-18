@@ -35,3 +35,10 @@ out/
 
 ### Codacy coverage ###
 .codacy-coverage/
+
+###log4j###
+logs/
+
+
+###Emails###
+src/main/resources/mail/

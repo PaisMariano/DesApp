@@ -14,11 +14,40 @@ repositories {
 }
 
 dependencies {
+    //Springboot
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    implementation 'org.springframework.security:spring-security-oauth2-resource-server'
+    implementation 'org.springframework.security:spring-security-config'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.3.5.RELEASE'
+
+    //email template
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
+    compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.5.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
+    //Oauth
+    compile group: 'com.auth0', name: 'auth0-spring-security-api', version: '1.4.0'
+    compile("com.auth0:java-jwt:3.4.0")
+
+    //Swagger
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    compile group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    //WEB DE SWAGGER - localhost:8090/swagger-ui/
+
+    //Junit
     testCompile('junit:junit:4.12')
+
+    //H2
     runtimeOnly 'com.h2database:h2'
+
+    //ArchUnit
+    testImplementation 'com.tngtech.archunit:archunit:0.14.1'
+
 }
 
 bootJar {

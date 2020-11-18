@@ -2,10 +2,10 @@
 [![Build Status](https://travis-ci.org/PaisMariano/DesApp.svg?branch=master)](https://travis-ci.org/PaisMariano/DesApp)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/468a934f4baa4e23bbaf4107c42801fa)](https://www.codacy.com/manual/PaisMariano/DesApp/dashboard?utm_source=github.com&utm_medium=referral&utm_content=PaisMariano/DesApp&utm_campaign=Badge_Coverage)
 
-# DesApp
+<h1>DesApp</h1>
 Trabajo Práctico para la materia Desarrollo de Aplicaciones.
 
-#### Integrantes del grupo
+<h2>Integrantes del grupo</h2>
 
 | Nombre   | Apellido  |
 | -------- | --------- |

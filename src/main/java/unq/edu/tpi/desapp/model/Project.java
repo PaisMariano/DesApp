@@ -1,5 +1,6 @@
 package unq.edu.tpi.desapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import unq.edu.tpi.desapp.model.exceptions.EndDateMustBeAfterStartDate;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 import unq.edu.tpi.desapp.model.exceptions.InvalidFactor;
@@ -7,16 +8,14 @@ import unq.edu.tpi.desapp.model.exceptions.InvalidMinClosePercentage;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "project")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private Integer factor;
     private Float minClosePercentage;
@@ -24,23 +23,24 @@ public class Project {
     private LocalDate endDate;
     private Integer raisedFunds;
 
-    @OneToOne(cascade = CascadeType.ALL) //Probablemente haya que cambiar el tipo de cascada al pedir un JSON
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonIgnore
     private ProjectState projectState;
 
     @OneToMany(mappedBy = "project")
     private List<Donation> donations;
 
     @ManyToMany
-    private Collection<User> users;
+    private Set<User> users;
 
     public Project() {super();}
 
-    public Project(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Location location) throws EndDateMustBeAfterStartDate, InvalidFactor, InvalidMinClosePercentage {
+    public Project(String name, Integer factor, Float percentage, LocalDate startDate, LocalDate endDate, Location location, ProjectState projectState) throws EndDateMustBeAfterStartDate, InvalidFactor, InvalidMinClosePercentage {
         this.name = name;
         this.factor = factor;
         this.minClosePercentage = percentage;
@@ -50,7 +50,7 @@ public class Project {
         this.raisedFunds = 0;
         this.users = new HashSet<>();
         this.donations = new ArrayList<>();
-        this.projectState = new Planned();
+        this.projectState = projectState;
         if (factor < 0 || factor > 100000) {
             throw new InvalidFactor();
         }
@@ -60,6 +60,14 @@ public class Project {
         if (endDate.isBefore(startDate)) {
             throw new EndDateMustBeAfterStartDate();
         }
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -102,7 +110,7 @@ public class Project {
         return users;
     }
 
-    public void setUsers(Collection<User> participants) {
+    public void setUsers(Set<User> participants) {
         this.users = participants;
     }
 
@@ -132,21 +140,37 @@ public class Project {
 
     public String getState() { return this.getProjectState().getState(); }
 
-    public void setEndDate(LocalDate endDate) throws EndDateMustBeAfterStartDate {
+    public void setFactor(Integer factor) {
+        this.factor = factor;
+    }
+
+    public void setMinClosePercentage(Float minClosePercentage) {
+        this.minClosePercentage = minClosePercentage;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setRaisedFunds(Integer raisedFunds) {
+        this.raisedFunds = raisedFunds;
+    }
+
+    public void setEndDateWithException(LocalDate endDate) throws EndDateMustBeAfterStartDate {
         if (endDate.isBefore(startDate)) {
             throw new EndDateMustBeAfterStartDate();
         }
         this.endDate = endDate;
     }
 
-    public void setRaisedFunds(Integer raisedFunds) throws IntegerMustBePositive {
+    public void setRaisedFundsWithException(Integer raisedFunds) throws IntegerMustBePositive {
         if (raisedFunds < 0) {
             throw new IntegerMustBePositive();
         }
         this.raisedFunds = raisedFunds;
     }
 
-    public void setFactor(Integer factor) throws InvalidFactor {
+    public void setFactorWithException(Integer factor) throws InvalidFactor {
         if (factor < 0 || factor > 100000) {
             throw new InvalidFactor();
         }
@@ -157,7 +181,7 @@ public class Project {
         return minClosePercentage;
     }
 
-    public void setMinClosePercentage(Float minClosePercentage) throws InvalidMinClosePercentage {
+    public void setMinClosePercentageWithException(Float minClosePercentage) throws InvalidMinClosePercentage {
         if (minClosePercentage < 50.0 || minClosePercentage > 100.0) {
             throw new InvalidMinClosePercentage();
         }
@@ -191,8 +215,10 @@ public class Project {
         return maxFundsRequired() * getMinClosePercentage() / 100;
     }
 
-    public void donate(Integer amount, String comment, User user) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
-        this.getProjectState().donate(amount, comment, user, this);
+    public void donate(Donation donation, User user) throws IntegerMustBePositive, EndDateMustBeAfterStartDate, InvalidMinClosePercentage, InvalidFactor {
+        donation.setProject(this);
+        donation.setUser(user);
+        this.getProjectState().donate(donation, user, this);
     }
 
     public void completeProject() {

@@ -1,16 +1,18 @@
 ---------------------------------------------------------------------
-TAG Entrega-1.0.1
+TAG Entrega-2.0.0
 ---------------------------------------------------------------------
 NEW FEATURES:
-* Capa de modelo
-* Tests unitarios con coverage de 95%+
-* Integración con Travis
-* Integración con Codacy
-* Deploy aumático con Heroku
+* Capa de repository
+* Capa de webservice
+* Capa de services
+* Tier de presentación (WIP)
+* Integración con Swagger
+* Logging de errores del backend mediante mediante el uso de aspectos
+* Precarga automatizada de datos "fake"
+* Manejo de excepciones custom de rest apis con handlers
+
 
 NOTES:
-* Capa de persistencia WIP
-* Al empezar a trabajar con la persistencia nos baja un poco el coverage, pero sigue arriba del 90%
+* Falta avanzar bastante con el Tier de presentación
+* Esto incluye la autenticación y autorización
 
-KNOWN ISSUES:
-* No tenemos automatizado el proceso de verificación del coverage en codacy, lo hacemos con un script por ahora
