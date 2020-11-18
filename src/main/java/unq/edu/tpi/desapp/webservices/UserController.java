@@ -34,8 +34,13 @@ public class UserController {
         return newUser;
     }
 
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
-        return userService.findByID(id);
+//    @GetMapping("/users/{id}")
+//    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
+//        return userService.findByID(id);
+//    }
+
+    @GetMapping("/users/{email}")
+    public User getUser(@PathVariable("email") String email) {
+        return userService.findByEmail(email);
     }
 }
