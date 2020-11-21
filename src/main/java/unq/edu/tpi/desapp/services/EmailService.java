@@ -1,8 +1,7 @@
 package unq.edu.tpi.desapp.services;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -14,15 +13,20 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import unq.edu.tpi.desapp.exceptions.FailedEmailException;
+import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
 import unq.edu.tpi.desapp.helpers.EmailServiceConfig;
+import unq.edu.tpi.desapp.model.Project;
 
 @Service
 public class EmailService {
 
-    private static final String EMAIL_EDITABLE_TEMPLATE_CLASSPATH_RES = "classpath:mail/editablehtml/email-editable.html";
+    private static final String TEMPLATE_CLASSPATH_RES = "classpath:mail/editablehtml/email-editable.html";
+    private static final String TEMPLATE_CLASSPATH_PROJECT = "classpath:mail/editablehtml/projectEnd.html";
 
     private static final String BACKGROUND_IMAGE = "mail/editablehtml/images/background.png";
     private static final String LOGO_BACKGROUND_IMAGE = "mail/editablehtml/images/logo-background.png";
@@ -46,7 +50,7 @@ public class EmailService {
 //    @Autowired
 //    private UserService userService;
 
-    public void sendDonorsEmail(final Locale locale) {
+    public void sendDonorsEmail(final Locale locale) throws FailedEmailException {
         List<String> donations = projectService.dailyTopTenDonations();
 //        List<User> users = userService.findAll();
 
@@ -56,10 +60,11 @@ public class EmailService {
                     "mariano_a_p@hotmail.com",
                     "Mira el TOP 10 de donaciones de hoy!",
                     donations,
+                    TEMPLATE_CLASSPATH_RES,
                     locale
             );
         } catch (MessagingException | IOException e){
-            e.printStackTrace();
+            throw new FailedEmailException("Failed sending email.");
         }
 //        users.stream()
 //                .forEach(elem -> {
@@ -77,7 +82,7 @@ public class EmailService {
 //                });
     }
 
-    public void sendLocationsEmail(final Locale locale) {
+    public void sendLocationsEmail(final Locale locale) throws FailedEmailException {
         List<String> locations = projectService.dailyLeastTenDonatedLocations();
 //        List<User> users = userService.findAll();
 
@@ -87,10 +92,11 @@ public class EmailService {
                     "mariano_a_p@hotmail.com",
                     "Mira el TOP 10 de locaciones con menos donaciones de hoy y empeza a donar!",
                     locations,
+                    TEMPLATE_CLASSPATH_RES,
                     locale
             );
         } catch (MessagingException | IOException e) {
-            e.printStackTrace();
+            throw new FailedEmailException("Failed sending email.");
         }
         //        users.stream()
 //                .forEach(elem -> {
@@ -108,8 +114,25 @@ public class EmailService {
 //                });
     }
 
-    public String getEditableMailTemplate() throws IOException {
-        final Resource templateResource = this.applicationContext.getResource(EMAIL_EDITABLE_TEMPLATE_CLASSPATH_RES);
+    public void sendEndingProjectEmail(Integer projectId, final Locale locale) throws FailedEmailException, ProjectNotFoundException {
+        Project project = projectService.findByID(projectId);
+
+        try {
+            sendEditableMail(
+                    "mariano",
+                    "mariano_a_p@hotmail.com",
+                    "Un proyecto en el que donaste se cerro!",
+                    Collections.singletonList(project.getName()),
+                    TEMPLATE_CLASSPATH_PROJECT,
+                    locale
+            );
+        } catch (MessagingException | IOException e){
+            throw new FailedEmailException("Failed sending email.");
+        }
+    }
+
+    public String getEditableMailTemplate(String classpath) throws IOException {
+        final Resource templateResource = this.applicationContext.getResource(classpath);
         final InputStream inputStream = templateResource.getInputStream();
         return IOUtils.toString(inputStream, EmailServiceConfig.EMAIL_TEMPLATE_ENCODING);
     }
@@ -122,6 +145,7 @@ public class EmailService {
             final String recipientEmail,
             final String subject,
             final List<String> displayList,
+            final String classpath,
             final Locale locale)
             throws MessagingException, IOException {
 
@@ -139,7 +163,7 @@ public class EmailService {
         ctx.setVariable("list", displayList);
 
         // Create the HTML body using Thymeleaf
-        final String htmlContent = this.htmlTemplateEngine.process(getEditableMailTemplate(), ctx);
+        final String htmlContent = this.htmlTemplateEngine.process(getEditableMailTemplate(classpath), ctx);
         message.setText(htmlContent, true /* isHtml */);
 
         // Add the inline images, referenced from the HTML code as "cid:image-name"
@@ -150,5 +174,11 @@ public class EmailService {
 
         // Send mail
         this.mailSender.send(mimeMessage);
+    }
+
+    @Scheduled(cron = "0 11 19 ? * *")
+    public void cronJobSch() throws FailedEmailException {
+        sendLocationsEmail(new Locale("Spanish"));
+        sendDonorsEmail(new Locale("Spanish"));
     }
 }

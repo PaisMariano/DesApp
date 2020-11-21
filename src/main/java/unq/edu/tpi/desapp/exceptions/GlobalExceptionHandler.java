@@ -30,7 +30,8 @@ public class GlobalExceptionHandler {
             DonationNotFoundException.class,
             UserNotFoundException.class,
             ElementAlreadyExists.class,
-            BadRequestException.class
+            BadRequestException.class,
+            FailedEmailException.class
     })
     @Nullable
     public final ResponseEntity<ApiError> handleException(Exception ex, WebRequest request) {

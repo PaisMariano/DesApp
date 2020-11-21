@@ -3,13 +3,10 @@ package unq.edu.tpi.desapp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unq.edu.tpi.desapp.exceptions.*;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.repositories.ProjectRepository;
-import unq.edu.tpi.desapp.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -32,6 +29,8 @@ public class ProjectService {
     private DonationService donationService;
     @Autowired
     private ArsatService arsatService;
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
     public Project save(Project project) {
@@ -112,10 +111,22 @@ public class ProjectService {
         }
     }
 
+    public void endProject(Integer projectId, Locale locale)
+            throws ProjectNotFoundException, ProjectAlreadyConnectedException, FailedEmailException {
+        Project newProject = findByID(projectId);
+        if (newProject.getProjectState().getState() != "Conectado") {
+            newProject.completeProject();
+            save(newProject);
+            emailService.sendEndingProjectEmail(projectId, locale);
+        } else {
+            throw new ProjectAlreadyConnectedException("Project already connected");
+        }
+    }
+
     public Collection<User> getDonnorsByProjectId(Integer id) throws ProjectNotFoundException {
         return findByID(id).getUsers();
     }
-
+    @Transactional
     public List<String> dailyLeastTenDonatedLocations() {
         List<Project> projects = this.findAllProjects();
 
@@ -190,7 +201,7 @@ public class ProjectService {
         }
         save(project);
     }
-
+    @Transactional
     public List<String> dailyTopTenDonations() {
         List<Donation> donations = donationService.findAll()
                 .stream()

@@ -2,10 +2,9 @@ package unq.edu.tpi.desapp.webservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import unq.edu.tpi.desapp.exceptions.FailedEmailException;
 import unq.edu.tpi.desapp.services.EmailService;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.Locale;
 
 @RestController
@@ -18,7 +17,7 @@ public class EmailController {
     @ResponseBody
     public String sendDonationsMail(
             final Locale locale)
-            throws MessagingException, IOException {
+            throws FailedEmailException {
 
         this.emailService.sendDonorsEmail(locale);
         return "Email sent";
@@ -28,7 +27,7 @@ public class EmailController {
     @ResponseBody
     public String sendLocationsMail(
             final Locale locale)
-            throws MessagingException, IOException {
+            throws FailedEmailException {
 
         this.emailService.sendLocationsEmail(locale);
         return "Email sent";

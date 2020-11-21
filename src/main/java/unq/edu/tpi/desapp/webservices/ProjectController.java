@@ -5,15 +5,13 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unq.edu.tpi.desapp.exceptions.*;
 import unq.edu.tpi.desapp.model.*;
-import unq.edu.tpi.desapp.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.services.ProjectService;
-import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @EnableAutoConfiguration
@@ -70,6 +68,16 @@ public class ProjectController {
     @GetMapping("/projects/{id}/donors")
     public Collection<User> getDonors(@PathVariable("id") Integer id) throws ProjectNotFoundException {
         return projectService.getDonnorsByProjectId(id);
+    }
+
+    @PutMapping("/projects/{id}/ending/")
+    public ResponseEntity<String> endProject(
+            @PathVariable("id") Integer id,
+            final Locale locale)
+            throws ProjectNotFoundException, FailedEmailException, ProjectAlreadyConnectedException {
+
+        projectService.endProject(id, locale);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
     //LOCATION METHODS
