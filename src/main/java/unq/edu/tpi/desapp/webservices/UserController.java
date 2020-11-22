@@ -3,9 +3,10 @@ package unq.edu.tpi.desapp.webservices;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import unq.edu.tpi.desapp.dtos.UserAuth0;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.services.UserService;
 import unq.edu.tpi.desapp.exceptions.BadRequestException;
@@ -49,10 +50,41 @@ public class UserController {
 //        return user;
 //    }
 
-//    @GetMapping("/users/{id}")
-//    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
-//        return userService.findByID(id);
+//    @GetMapping("/login")
+//    public ResponseEntity<String> loginUser(@RequestHeader("authorization") String authHeader) throws UserNotFoundException {
+//        return new ResponseEntity<String>(authHeader, HttpStatus.OK);
 //    }
+
+    @GetMapping("/login")
+    public ResponseEntity<UserAuth0> loginUser(@RequestHeader("authorization") String authHeader) {
+        // Create and set the "Authorization" header before sending HTTP request
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authHeader);
+        HttpEntity<String> entity = new HttpEntity<>("headers", headers);
+
+        // Use the "RestTemplate" API provided by Spring to make the HTTP request
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserAuth0> user = restTemplate.exchange("https://dev-lyitcq2e.us.auth0.com/userinfo", HttpMethod.GET, entity, UserAuth0.class);
+        return new ResponseEntity<UserAuth0>(user.getBody(), HttpStatus.OK);
+    }
+
+//    @GetMapping("/login")
+//    public Object loginUser(@RequestHeader("authorization") String authHeader) throws UserNotFoundException {
+//        // Create and set the "Authorization" header before sending HTTP request
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", authHeader);
+//        HttpEntity<String> entity = new HttpEntity<>("headers", headers);
+//
+//        // Use the "RestTemplate" API provided by Spring to make the HTTP request
+//        RestTemplate restTemplate = new RestTemplate();
+//        Object user = restTemplate.exchange("https://dev-lyitcq2e.us.auth0.com/userinfo", HttpMethod.POST, entity, UserAuth0.class);
+//        return user;
+//    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
+        return userService.findByID(id);
+    }
 
     @GetMapping("/users/{email}")
     public User getUser(@PathVariable("email") String email) {
