@@ -48,6 +48,9 @@ dependencies {
     //ArchUnit
     testImplementation 'com.tngtech.archunit:archunit:0.14.1'
 
+    //Javax validation
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.6.Final'
 }
 
 bootJar {

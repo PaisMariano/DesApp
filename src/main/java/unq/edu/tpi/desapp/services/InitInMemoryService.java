@@ -49,7 +49,7 @@ public class InitInMemoryService {
                 "Federico",
                 "fedecame@gmail.com",
                 "asdf",
-                "coloApagaVentilador",
+                "coloVentilador",
                 new ArrayList<>()));
         userService.createUser(new User(
                 "Roberto",

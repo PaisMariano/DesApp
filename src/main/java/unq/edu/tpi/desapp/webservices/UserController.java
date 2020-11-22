@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.services.UserService;
@@ -11,6 +12,7 @@ import unq.edu.tpi.desapp.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,7 +28,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@RequestBody User user) throws BadRequestException, ElementAlreadyExists {
+    public User createUser(@Valid @RequestBody User user, BindingResult errors) throws BadRequestException, ElementAlreadyExists {
+        if (errors.hasErrors())
+            throw BadRequestException.createWith("JSON bad request or missing field.");
+
         User newUser = userService.createUser(user);
 
         ResponseEntity.status(HttpStatus.CREATED);

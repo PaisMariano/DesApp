@@ -1,6 +1,7 @@
 package unq.edu.tpi.desapp.webservices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.exceptions.FailedEmailException;
 import unq.edu.tpi.desapp.services.EmailService;
@@ -8,6 +9,7 @@ import unq.edu.tpi.desapp.services.EmailService;
 import java.util.Locale;
 
 @RestController
+@EnableAutoConfiguration
 public class EmailController {
 
     @Autowired

@@ -24,5 +24,4 @@ public class DonationController {
     public Donation getDonation(@PathVariable("id") Integer id) throws DonationNotFoundException {
         return donationService.findByID(id);
     }
-
 }

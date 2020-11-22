@@ -9,6 +9,7 @@ import unq.edu.tpi.desapp.exceptions.*;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.services.ProjectService;
 
+import java.sql.Time;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +43,8 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{id}")
-    public Project getProject(@PathVariable("id") Integer id) throws ProjectNotFoundException {
+    public Project getProject(@PathVariable("id") Integer id) throws ProjectNotFoundException, InterruptedException {
+        Thread.sleep(2000);
         return projectService.findByID(id);
     }
 

@@ -53,7 +53,6 @@ public class UserService {
     }
 
     public User createUser(User user) throws BadRequestException, ElementAlreadyExists {
-        //probablemente aca se haga la encriptacion de la password.
         User newUser = null;
         try {
             newUser = new User(user.getUsername(),
