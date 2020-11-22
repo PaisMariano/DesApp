@@ -75,5 +75,28 @@ public class UserService {
         return newUser;
     }
 
+//    public User createUserImproved(String email, String username, String password, String nickname) throws BadRequestException, ElementAlreadyExists {
+//        //probablemente aca se haga la encriptacion de la password.
+//        User newUser = null;
+//        try {
+//            newUser = new User(username,
+//                    email,
+//                    password,
+//                    nickname,
+//                    new ArrayList<>());
+//            if (findByEmail(newUser.getEmail()) != null){
+//                throw new ElementAlreadyExists("Email already exists.");
+//            }
+//
+//        } catch (NullPointerException ex) {
+//            throw BadRequestException.createWith("JSON bad request or missing field.");
+//        } catch (BadEmailAddressException ex) {
+//            throw BadRequestException.createWith(ex.getMessage());
+//        }
+//
+//        save(newUser);
+//        return newUser;
+//    }
+
 
 }
