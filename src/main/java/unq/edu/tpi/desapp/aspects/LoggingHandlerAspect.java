@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Order(0)
-public class LoggingHandler {
+public class LoggingHandlerAspect {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     long start = 0;

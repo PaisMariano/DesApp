@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.services.DonationService;
-import unq.edu.tpi.desapp.exceptions.DonationNotFoundException;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class DonationController {
     }
 
     @GetMapping("/donations/{id}")
-    public Donation getDonation(@PathVariable("id") Integer id) throws DonationNotFoundException {
+    public Donation getDonation(@PathVariable("id") Integer id) throws Exception {
         return donationService.findByID(id);
     }
 }

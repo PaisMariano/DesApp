@@ -9,7 +9,6 @@ import unq.edu.tpi.desapp.exceptions.*;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.services.ProjectService;
 
-import java.sql.Time;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +24,7 @@ public class ProjectController {
     @GetMapping("/projects/page")
     public List<Project> allProjects(
             @RequestParam Integer from,
-            @RequestParam Integer to) throws BadRequestException {
+            @RequestParam Integer to) throws Exception {
 
         return projectService.findAllProjectsWithIndexes(from, to);
     }
@@ -36,7 +35,7 @@ public class ProjectController {
     }
 
     @PostMapping("/projects")
-    public ResponseEntity<String> createProject(@RequestBody Project project) throws BadRequestException, ElementAlreadyExists{
+    public ResponseEntity<String> createProject(@RequestBody Project project) throws Exception{
         projectService.createProject(project);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Created");
@@ -51,7 +50,7 @@ public class ProjectController {
     @PutMapping("/projects/{id}")
     public ResponseEntity<String> updateProject(
             @RequestBody Project project,
-            @PathVariable("id") Integer id) throws ProjectNotFoundException, BadRequestException {
+            @PathVariable("id") Integer id) throws Exception {
 
         projectService.updateProject(id, project);
 
@@ -76,7 +75,7 @@ public class ProjectController {
     public ResponseEntity<String> endProject(
             @PathVariable("id") Integer id,
             final Locale locale)
-            throws ProjectNotFoundException, FailedEmailException, ProjectAlreadyConnectedException {
+            throws Exception {
 
         projectService.endProject(id, locale);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
@@ -94,7 +93,7 @@ public class ProjectController {
     @PutMapping("/locations/{id}")
     public ResponseEntity<String> updateLocation(
             @RequestBody Location location,
-            @PathVariable("id") Integer id) throws BadRequestException {
+            @PathVariable("id") Integer id) throws Exception {
 
         projectService.updateLocation(id, location);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
@@ -111,7 +110,7 @@ public class ProjectController {
     public ResponseEntity<String> createDonation(
             @PathVariable("projectId") Integer projectId,
             @PathVariable("userId") Integer userId,
-            @RequestBody Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
+            @RequestBody Donation donation) throws Exception {
 
         projectService.createDonation(projectId, userId, donation);
 

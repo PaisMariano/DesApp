@@ -8,7 +8,6 @@ import unq.edu.tpi.desapp.repositories.DonationRepository;
 import unq.edu.tpi.desapp.exceptions.DonationNotFoundException;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class DonationService {
@@ -21,14 +20,9 @@ public class DonationService {
         return this.donationRepository.save(model);
     }
 
-    public Donation findByID(Integer id) throws DonationNotFoundException {
-        Donation newDonation = null;
-        try{
-            newDonation = this.donationRepository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw DonationNotFoundException.createWith(id.toString());
-        }
-        return newDonation;
+    public Donation findByID(Integer id) throws Exception {
+        return this.donationRepository.findById(id)
+                .orElseThrow(() -> DonationNotFoundException.createWith(id.toString()));
     }
 
     public List<Donation> findAll() {

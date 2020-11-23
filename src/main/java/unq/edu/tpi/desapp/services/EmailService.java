@@ -17,8 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import unq.edu.tpi.desapp.exceptions.FailedEmailException;
-import unq.edu.tpi.desapp.exceptions.ProjectNotFoundException;
+import unq.edu.tpi.desapp.aspects.ExceptionAspect;
 import unq.edu.tpi.desapp.helpers.EmailServiceConfig;
 import unq.edu.tpi.desapp.model.Project;
 
@@ -50,22 +49,19 @@ public class EmailService {
 //    @Autowired
 //    private UserService userService;
 
-    public void sendDonorsEmail(final Locale locale) throws FailedEmailException {
+    @ExceptionAspect
+    public void sendDonorsEmail(final Locale locale) throws Exception {
         List<String> donations = projectService.dailyTopTenDonations();
 //        List<User> users = userService.findAll();
 
-        try {
-            sendEditableMail(
-                    "mariano",
-                    "mariano_a_p@hotmail.com",
-                    "Mira el TOP 10 de donaciones de hoy!",
-                    donations,
-                    TEMPLATE_CLASSPATH_RES,
-                    locale
-            );
-        } catch (MessagingException | IOException e){
-            throw new FailedEmailException("Failed sending email.");
-        }
+        sendEditableMail(
+                "mariano",
+                "mariano_a_p@hotmail.com",
+                "Mira el TOP 10 de donaciones de hoy!",
+                donations,
+                TEMPLATE_CLASSPATH_RES,
+                locale
+        );
 //        users.stream()
 //                .forEach(elem -> {
 //                    try {
@@ -82,22 +78,19 @@ public class EmailService {
 //                });
     }
 
-    public void sendLocationsEmail(final Locale locale) throws FailedEmailException {
+    @ExceptionAspect
+    public void sendLocationsEmail(final Locale locale) throws Exception {
         List<String> locations = projectService.dailyLeastTenDonatedLocations();
 //        List<User> users = userService.findAll();
 
-        try {
-            sendEditableMail(
-                    "mariano",
-                    "mariano_a_p@hotmail.com",
-                    "Mira el TOP 10 de locaciones con menos donaciones de hoy y empeza a donar!",
-                    locations,
-                    TEMPLATE_CLASSPATH_RES,
-                    locale
-            );
-        } catch (MessagingException | IOException e) {
-            throw new FailedEmailException("Failed sending email.");
-        }
+        sendEditableMail(
+                "mariano",
+                "mariano_a_p@hotmail.com",
+                "Mira el TOP 10 de locaciones con menos donaciones de hoy y empeza a donar!",
+                locations,
+                TEMPLATE_CLASSPATH_RES,
+                locale
+        );
         //        users.stream()
 //                .forEach(elem -> {
 //                    try {
@@ -114,21 +107,18 @@ public class EmailService {
 //                });
     }
 
-    public void sendEndingProjectEmail(Integer projectId, final Locale locale) throws FailedEmailException, ProjectNotFoundException {
+    @ExceptionAspect
+    public void sendEndingProjectEmail(Integer projectId, final Locale locale) throws Exception {
         Project project = projectService.findByID(projectId);
 
-        try {
-            sendEditableMail(
-                    "mariano",
-                    "mariano_a_p@hotmail.com",
-                    "Un proyecto en el que donaste se cerro!",
-                    Collections.singletonList(project.getName()),
-                    TEMPLATE_CLASSPATH_PROJECT,
-                    locale
-            );
-        } catch (MessagingException | IOException e){
-            throw new FailedEmailException("Failed sending email.");
-        }
+        sendEditableMail(
+                "mariano",
+                "mariano_a_p@hotmail.com",
+                "Un proyecto en el que donaste se cerro!",
+                Collections.singletonList(project.getName()),
+                TEMPLATE_CLASSPATH_PROJECT,
+                locale
+        );
     }
 
     public String getEditableMailTemplate(String classpath) throws IOException {
@@ -176,9 +166,10 @@ public class EmailService {
         this.mailSender.send(mimeMessage);
     }
 
-    @Scheduled(cron = "0 11 19 ? * *")
-    public void cronJobSch() throws FailedEmailException {
+    @Scheduled(cron = "0 35 14 ? * *")
+    public void cronJobSch() throws Exception {
         sendLocationsEmail(new Locale("Spanish"));
         sendDonorsEmail(new Locale("Spanish"));
+        sendEndingProjectEmail(11, new Locale("Spanish"));
     }
 }

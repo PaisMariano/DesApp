@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.services.UserService;
 import unq.edu.tpi.desapp.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -28,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user, BindingResult errors) throws BadRequestException, ElementAlreadyExists {
+    public User createUser(@Valid @RequestBody User user, BindingResult errors) throws Exception {
         if (errors.hasErrors())
             throw BadRequestException.createWith("JSON bad request or missing field.");
 
@@ -40,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
+    public User getUser(@PathVariable("id") Integer id) throws Exception {
         return userService.findByID(id);
     }
 }
