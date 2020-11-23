@@ -52,6 +52,21 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    public User updateUser(User user) throws BadRequestException {
+        User userToUpdate;
+        try {
+            userToUpdate = findByEmail(user.getEmail());
+            userToUpdate.setUsername(user.getUsername());
+            userToUpdate.setNickname(user.getNickname());
+            userToUpdate.setEmail(user.getEmail());
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
+        }
+
+        save(userToUpdate);
+        return userToUpdate;
+    }
+
     public User createUser(User user) throws BadRequestException, ElementAlreadyExists {
         //probablemente aca se haga la encriptacion de la password.
         User newUser = null;

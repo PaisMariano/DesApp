@@ -13,7 +13,9 @@ import unq.edu.tpi.desapp.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
 import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -32,6 +34,20 @@ public class UserController {
         User newUser = userService.createUser(user);
 
         ResponseEntity.status(HttpStatus.CREATED);
+
+        return newUser;
+    }
+
+    @PostMapping("/update_user")
+    public User createOrUpdateUser(@RequestBody User user) throws BadRequestException {
+        User newUser;
+        try {
+            newUser = userService.createUser(user);
+            ResponseEntity.status(HttpStatus.CREATED);
+        } catch (ElementAlreadyExists ex) {
+            newUser = userService.updateUser(user);
+            ResponseEntity.status(HttpStatus.OK);
+        }
 
         return newUser;
     }
@@ -55,8 +71,21 @@ public class UserController {
 //        return new ResponseEntity<String>(authHeader, HttpStatus.OK);
 //    }
 
+//    @GetMapping("/login")
+//    public ResponseEntity<UserAuth0> loginUser(@RequestHeader("authorization") String authHeader) {
+//        // Create and set the "Authorization" header before sending HTTP request
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", authHeader);
+//        HttpEntity<String> entity = new HttpEntity<>("headers", headers);
+//
+//        // Use the "RestTemplate" API provided by Spring to make the HTTP request
+//        RestTemplate restTemplate = new RestTemplate();
+//        ResponseEntity<UserAuth0> user = restTemplate.exchange("https://dev-lyitcq2e.us.auth0.com/userinfo", HttpMethod.GET, entity, UserAuth0.class);
+//        return new ResponseEntity<UserAuth0>(user.getBody(), HttpStatus.OK);
+//    }
+
     @GetMapping("/login")
-    public ResponseEntity<UserAuth0> loginUser(@RequestHeader("authorization") String authHeader) {
+    public Map<String, String> loginUser(@RequestHeader("authorization") String authHeader) {
         // Create and set the "Authorization" header before sending HTTP request
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authHeader);
@@ -65,26 +94,21 @@ public class UserController {
         // Use the "RestTemplate" API provided by Spring to make the HTTP request
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<UserAuth0> user = restTemplate.exchange("https://dev-lyitcq2e.us.auth0.com/userinfo", HttpMethod.GET, entity, UserAuth0.class);
-        return new ResponseEntity<UserAuth0>(user.getBody(), HttpStatus.OK);
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            userService.findByID(1);
+            map.put("user_status", "logged");
+            return map;
+        } catch (UserNotFoundException ex) {
+            map.put("user_status", "created");
+            return map;
+        }
     }
 
-//    @GetMapping("/login")
-//    public Object loginUser(@RequestHeader("authorization") String authHeader) throws UserNotFoundException {
-//        // Create and set the "Authorization" header before sending HTTP request
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", authHeader);
-//        HttpEntity<String> entity = new HttpEntity<>("headers", headers);
-//
-//        // Use the "RestTemplate" API provided by Spring to make the HTTP request
-//        RestTemplate restTemplate = new RestTemplate();
-//        Object user = restTemplate.exchange("https://dev-lyitcq2e.us.auth0.com/userinfo", HttpMethod.POST, entity, UserAuth0.class);
-//        return user;
+//    @GetMapping("/users/{id}")
+//    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
+//        return userService.findByID(id);
 //    }
-
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
-        return userService.findByID(id);
-    }
 
     @GetMapping("/users/{email}")
     public User getUser(@PathVariable("email") String email) {
