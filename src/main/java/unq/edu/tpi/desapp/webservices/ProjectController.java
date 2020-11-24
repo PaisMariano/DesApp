@@ -14,6 +14,7 @@ import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -63,6 +64,15 @@ public class ProjectController {
             @PathVariable("projectId") Integer projectId,
             @PathVariable("stateId") Integer stateId) throws ProjectNotFoundException {
 
+        projectService.updateProjectService(projectId, stateId);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
+    }
+
+    @PostMapping("/project_state")
+    public ResponseEntity<String> updateProjectState(@RequestBody Map<String, Integer> json) throws ProjectNotFoundException {
+
+        Integer projectId = json.get("projectId");
+        Integer stateId = json.get("stateId");
         projectService.updateProjectService(projectId, stateId);
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }

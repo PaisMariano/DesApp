@@ -1,6 +1,7 @@
 package unq.edu.tpi.desapp.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,9 +29,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/api/public").permitAll()
                 .mvcMatchers("/projects").authenticated()
                 .mvcMatchers("/update_user").authenticated()
+//                .mvcMatchers("/projects/*").permitAll()
+//                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").permitAll()
+//                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").hasAuthority("SCOPE_write:projects")
+//                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").authenticated()
+                .mvcMatchers("/project_state").authenticated()
                 .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
+
+//                http.authorizeRequests()
+//                .anyRequest()
+//                .anonymous();
+//                http.csrf().disable();
     }
 
     @Bean
