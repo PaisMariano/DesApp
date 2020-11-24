@@ -3,16 +3,14 @@ package unq.edu.tpi.desapp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unq.edu.tpi.desapp.aspects.ExceptionAspect;
 import unq.edu.tpi.desapp.model.User;
-import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.repositories.UserRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
+import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
+import unq.edu.tpi.desapp.exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,14 +24,9 @@ public class UserService {
         return this.userRepository.save(model);
     }
 
-    public User findByID(Integer id) throws UserNotFoundException {
-        User newUser = null;
-        try {
-            newUser = this.userRepository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw UserNotFoundException.createWith(id.toString());
-        }
-        return newUser;
+    public User findByID(Integer id) throws Exception {
+        return this.userRepository.findById(id)
+                .orElseThrow(() -> UserNotFoundException.createWith(id.toString()));
     }
 
     public User findByEmail(String email) {
@@ -52,28 +45,20 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User createUser(User user) throws BadRequestException, ElementAlreadyExists {
-        //probablemente aca se haga la encriptacion de la password.
+    @ExceptionAspect
+    public User createUser(User user) throws Exception {
         User newUser = null;
-        try {
-            newUser = new User(user.getUsername(),
-                    user.getEmail(),
-                    user.getPassword(),
-                    user.getNickname(),
-                    new ArrayList<>());
-            if (findByEmail(newUser.getEmail()) != null){
-                throw new ElementAlreadyExists("Email already exists.");
-            }
 
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (BadEmailAddressException ex) {
-            throw BadRequestException.createWith(ex.getMessage());
+        newUser = new User(user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getNickname(),
+                new ArrayList<>());
+        if (findByEmail(newUser.getEmail()) != null){
+            throw new ElementAlreadyExists("Email already exists.");
         }
 
         save(newUser);
         return newUser;
     }
-
-
 }

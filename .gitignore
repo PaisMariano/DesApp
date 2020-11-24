@@ -38,3 +38,7 @@ out/
 
 ###log4j###
 logs/
+
+
+###Emails###
+src/main/resources/mail/

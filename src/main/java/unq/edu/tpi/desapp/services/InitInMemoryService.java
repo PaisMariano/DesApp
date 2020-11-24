@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
-import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.*;
 import unq.edu.tpi.desapp.model.builders.DonationBuilder;
 
@@ -12,10 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
-@Transactional
-public class InitServiceInMemory {
-
-    //protected final Logger logger = LogManager.getLogger(getClass());
+public class InitInMemoryService {
 
     @Value("${spring.datasource.driverClassName:NONE}")
     private String className;
@@ -29,20 +25,16 @@ public class InitServiceInMemory {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private DonationService donationService;
-
     @PostConstruct
     public void initialize() throws Exception {
         if (className.equals("org.h2.Driver")) {
-            //logger.warn("Init Data Using H2 DB");
                 //DATOS MAESTROS NECESARIOS.
                 fireInitialDataUser();
                 fireInitialDataProjectState();
                 fireInitialDataProject();
 
                 //DATOS HISTORICOS.
-                fireInitialDataDonation();
+                fireIniDataDonation();
         }
     }
 
@@ -57,7 +49,7 @@ public class InitServiceInMemory {
                 "Federico",
                 "fedecame@gmail.com",
                 "asdf",
-                "coloApagaVentilador",
+                "coloVentilador",
                 new ArrayList<>()));
         userService.createUser(new User(
                 "Roberto",
@@ -137,7 +129,7 @@ public class InitServiceInMemory {
                 100,
                 60.0f,
                 LocalDate.now(),
-                LocalDate.of(2020, 10, 29),
+                LocalDate.of(2020, 11, 29),
                 new Location("Castelar","Buenos Aires",65841),
                 projectStateService.findByID(1)));
         projectService.createProject(new Project(
@@ -145,7 +137,7 @@ public class InitServiceInMemory {
                 500,
                 65.0f,
                 LocalDate.now(),
-                LocalDate.of(2020, 10, 28),
+                LocalDate.of(2020, 11, 28),
                 new Location("Tigre","Buenos Aires",75241),
                 projectStateService.findByID(1)));
         projectService.createProject(new Project(
@@ -207,7 +199,7 @@ public class InitServiceInMemory {
 
     }
 
-    private void fireInitialDataDonation() throws Exception {
+    private void fireIniDataDonation() throws Exception {
         Donation donacion1Usuario1 = DonationBuilder.aDonation()
                 .withAmount(10000)
                 .withComment("Donacion!!!")
@@ -336,5 +328,4 @@ public class InitServiceInMemory {
         projectService.createDonation(29, 10, donacion5Usuario10);
         projectService.createDonation(29, 10, donacion6Usuario10);
     }
-
 }

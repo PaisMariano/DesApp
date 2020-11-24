@@ -5,34 +5,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.model.Donation;
 import unq.edu.tpi.desapp.repositories.DonationRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.DonationNotFoundException;
+import unq.edu.tpi.desapp.exceptions.DonationNotFoundException;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class DonationService {
 
     @Autowired
     private DonationRepository donationRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ProjectService projectService;
 
     @Transactional
     public Donation save(Donation model) {
         return this.donationRepository.save(model);
     }
 
-    public Donation findByID(Integer id) throws DonationNotFoundException {
-        Donation newDonation = null;
-        try{
-            newDonation = this.donationRepository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw DonationNotFoundException.createWith(id.toString());
-        }
-        return newDonation;
+    public Donation findByID(Integer id) throws Exception {
+        return this.donationRepository.findById(id)
+                .orElseThrow(() -> DonationNotFoundException.createWith(id.toString()));
     }
 
     public List<Donation> findAll() {

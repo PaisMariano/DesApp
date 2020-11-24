@@ -1,4 +1,4 @@
-package unq.edu.tpi.desapp.webservices.exceptions;
+package unq.edu.tpi.desapp.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,8 @@ public class GlobalExceptionHandler {
             DonationNotFoundException.class,
             UserNotFoundException.class,
             ElementAlreadyExists.class,
-            BadRequestException.class
+            BadRequestException.class,
+            FailedEmailException.class
     })
     @Nullable
     public final ResponseEntity<ApiError> handleException(Exception ex, WebRequest request) {

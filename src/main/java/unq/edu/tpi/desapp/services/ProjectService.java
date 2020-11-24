@@ -3,13 +3,10 @@ package unq.edu.tpi.desapp.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import unq.edu.tpi.desapp.aspects.ExceptionAspect;
+import unq.edu.tpi.desapp.exceptions.*;
 import unq.edu.tpi.desapp.model.*;
-import unq.edu.tpi.desapp.model.exceptions.*;
 import unq.edu.tpi.desapp.repositories.ProjectRepository;
-import unq.edu.tpi.desapp.webservices.exceptions.BadRequestException;
-import unq.edu.tpi.desapp.webservices.exceptions.ElementAlreadyExists;
-import unq.edu.tpi.desapp.webservices.exceptions.ProjectNotFoundException;
-import unq.edu.tpi.desapp.webservices.exceptions.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -31,7 +28,10 @@ public class ProjectService {
     @Autowired
     private DonationService donationService;
     @Autowired
-    private ArsatHandler arsatHandler;
+    private ArsatService arsatService;
+    @Autowired
+    private EmailService emailService;
+
 
     @Transactional
     public Project save(Project project) {
@@ -39,13 +39,8 @@ public class ProjectService {
     }
 
     public Project findByID(Integer id) throws ProjectNotFoundException {
-        Project newProject = null;
-        try {
-            newProject = projectRepository.findById(id).get();
-        } catch (NoSuchElementException ex) {
-            throw ProjectNotFoundException.createWith(id.toString());
-        }
-        return newProject;
+        return projectRepository.findById(id)
+                .orElseThrow(() -> ProjectNotFoundException.createWith(id.toString()));
     }
 
     public List<Project> findAllProjects() {
@@ -58,7 +53,17 @@ public class ProjectService {
         return findByID(id).getUsers();
     }
 
-    public Project createProject(Project project) throws ElementAlreadyExists, BadRequestException {
+    @ExceptionAspect
+    public List<Project> findAllProjectsWithIndexes(Integer from, Integer to) throws Exception {
+        List<Project> projects = null;
+        projects = projectRepository.findAll()
+                .subList(from, to);
+
+        return projects;
+    }
+
+    @ExceptionAspect
+    public Project createProject(Project project) throws Exception {
         Location newLocation = locationService.findByName(project.getLocation().getName());
         if (newLocation != null) {
             throw new ElementAlreadyExists("Location already exists.");
@@ -67,45 +72,48 @@ public class ProjectService {
         ProjectState projectState = projectStateService.findByID(1);
 
         Project newProject = null;
-        try {
-            newProject = new Project(project.getName(),
-                    project.getFactor(),
-                    project.getMinClosePercentage(),
-                    project.getStartDate(),
-                    project.getEndDate(),
-                    project.getLocation(),
-                    projectState);
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
-            throw BadRequestException.createWith(ex.getMessage());
-        }
+
+        newProject = new Project(project.getName(),
+                project.getFactor(),
+                project.getMinClosePercentage(),
+                project.getStartDate(),
+                project.getEndDate(),
+                project.getLocation(),
+                projectState);
+
         save(newProject);
         return newProject;
     }
 
-    public void updateProject(Integer projectId, Project project) throws ProjectNotFoundException, BadRequestException {
+    @ExceptionAspect
+    public void updateProject(Integer projectId, Project project) throws Exception {
         Project newProject = findByID(projectId);
 
-        try {
-            newProject.setName(project.getName());
-            newProject.setFactorWithException(project.getFactor());
-            newProject.setMinClosePercentageWithException(project.getMinClosePercentage());
-            newProject.setStartDate(project.getStartDate());
-            newProject.setEndDateWithException(project.getEndDate());
+        newProject.setName(project.getName());
+        newProject.setFactorWithException(project.getFactor());
+        newProject.setMinClosePercentageWithException(project.getMinClosePercentage());
+        newProject.setStartDate(project.getStartDate());
+        newProject.setEndDateWithException(project.getEndDate());
+        save(newProject);
+    }
+
+    public void endProject(Integer projectId, Locale locale)
+            throws Exception {
+        Project newProject = findByID(projectId);
+        if (newProject.getProjectState().getState() != "Conectado") {
+            newProject.completeProject();
             save(newProject);
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (EndDateMustBeAfterStartDate | InvalidFactor | InvalidMinClosePercentage ex) {
-            throw BadRequestException.createWith(ex.getMessage());
+            emailService.sendEndingProjectEmail(projectId, locale);
+        } else {
+            throw new ProjectAlreadyConnectedException("Project already connected");
         }
     }
 
     public Collection<User> getDonnorsByProjectId(Integer id) throws ProjectNotFoundException {
         return findByID(id).getUsers();
     }
-
-    public List<Location> dailyLeastTenDonatedLocations() {
+    @Transactional
+    public List<String> dailyLeastTenDonatedLocations() {
         List<Project> projects = this.findAllProjects();
 
         List<Donation> lastDonations = new ArrayList<>();
@@ -121,8 +129,12 @@ public class ProjectService {
                 .limit(10)
                 .collect(Collectors.toList());
 
-        return lastDonations.stream()
+        List<Location> lastLocations = lastDonations.stream()
                 .map(elem -> elem.getProject().getLocation())
+                .collect(Collectors.toList());
+
+        return lastLocations.stream()
+                .map(elem -> elem.getName() + " - " +  elem.getProvince())
                 .collect(Collectors.toList());
     }
 
@@ -141,49 +153,50 @@ public class ProjectService {
         save(newProject);
     }
 
-    public void updateLocation(Integer locationId, Location location) throws BadRequestException {
+    @ExceptionAspect
+    public Location updateLocation(Integer locationId, Location location) throws Exception {
         Location newLocation = locationService.findByID(locationId);
-        try {
-            newLocation.setPopulationWithException(location.getPopulation());
-            newLocation.setProvince(location.getProvince());
-            locationService.save(newLocation);
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (IntegerMustBePositive ex) {
-            throw BadRequestException.createWith(ex.getMessage());
-        }
+
+        newLocation.setPopulationWithException(location.getPopulation());
+        newLocation.setProvince(location.getProvince());
+        locationService.save(newLocation);
+
+        return newLocation;
     }
 
     public List<ArsatLocation> getAllArsatLocations() {
-        return arsatHandler.getLocations();
+        return arsatService.getLocations();
     }
 
+    @ExceptionAspect
     @Transactional
-    public void createDonation(Integer projectId, Integer userId, Donation donation) throws ProjectNotFoundException, UserNotFoundException, BadRequestException {
+    public Donation createDonation(Integer projectId, Integer userId, Donation donation) throws Exception {
         User user = userService.findByID(userId);
         Project project = findByID(projectId);
         Donation newDonation = null;
-        try {
-            newDonation = new Donation(donation.getAmount(), donation.getComment(), LocalDate.now(), user.getNickname());
-            donationService.save(newDonation);
-            project.donate(newDonation, user);
 
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
-        } catch (IntegerMustBePositive | EndDateMustBeAfterStartDate | InvalidMinClosePercentage | InvalidFactor ex) {
-            throw BadRequestException.createWith(ex.getMessage());
-        }
+        newDonation = new Donation(donation.getAmount(), donation.getComment(), LocalDate.now(), user.getNickname());
+        donationService.save(newDonation);
+        project.donate(newDonation, user);
+
         save(project);
+        return newDonation;
     }
-    public List<Donation> dailyTopTenDonations() {
+
+    @Transactional
+    public List<String> dailyTopTenDonations() {
         List<Donation> donations = donationService.findAll()
                 .stream()
                 .filter(elem -> elem.getDate().equals(LocalDate.now()))
                 .collect(Collectors.toList());
 
-        return donations.stream()
+        List<Donation> donationsTop10 = donations.stream()
                 .sorted(comparing(Donation::getAmount).reversed())
                 .limit(10)
+                .collect(Collectors.toList());
+
+        return donationsTop10.stream()
+                .map(elem -> elem.getUser().getNickname() + " - $ " +  elem.getAmount())
                 .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package unq.edu.tpi.desapp.aspects;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -15,11 +16,12 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Order(0)
-public class LoggingHandler {
+public class LoggingHandlerAspect {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    long start = 0;
 
-    /// CUSTOM  POINTCUT////
+    /// CUSTOM  POINTCUT ///
     @Pointcut("execution(* unq.edu.tpi.desapp.webservices.*.*(..))")
     public void methodsStarterServicePointcut() {
         //No behaviour method
@@ -27,11 +29,14 @@ public class LoggingHandler {
 
     @Before("methodsStarterServicePointcut()")
     public void beforeMethods(JoinPoint joinPoint) throws Throwable {
-        logger.info("CLASS NAME : " + joinPoint.getSignature().getDeclaringTypeName() +
-                " - METHOD : " + joinPoint.getSignature().getName() +
-                " - ARGS : " + Arrays.toString(joinPoint.getArgs()));
-
+        start = System.currentTimeMillis();
     }
 
-    //@After("methodsStarterServicePointcut()")
+    @After("methodsStarterServicePointcut()")
+    public void afterMethods(JoinPoint joinPoint) throws Throwable {
+        logger.info("CLASS NAME : " + joinPoint.getSignature().getDeclaringTypeName() +
+                " - METHOD : " + joinPoint.getSignature().getName() +
+                " - ARGS : " + Arrays.toString(joinPoint.getArgs()) +
+                " - EX TIME: " + (System.currentTimeMillis() - start) + " MS");
+    }
 }
