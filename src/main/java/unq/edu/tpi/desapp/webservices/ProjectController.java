@@ -71,7 +71,7 @@ public class ProjectController {
         return projectService.getDonnorsByProjectId(id);
     }
 
-    @PutMapping("/projects/{id}/ending/")
+    @PutMapping("/projects/{id}/ending")
     public ResponseEntity<String> endProject(
             @PathVariable("id") Integer id,
             final Locale locale)
