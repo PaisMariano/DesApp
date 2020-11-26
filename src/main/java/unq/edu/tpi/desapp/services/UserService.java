@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.aspects.ExceptionAspect;
+import unq.edu.tpi.desapp.exceptions.BadRequestException;
 import unq.edu.tpi.desapp.model.User;
 import unq.edu.tpi.desapp.repositories.UserRepository;
 import unq.edu.tpi.desapp.exceptions.ElementAlreadyExists;
@@ -43,6 +44,21 @@ public class UserService {
 
     public List<User> findAll() {
         return this.userRepository.findAll();
+    }
+
+    public User updateUser(User user) throws BadRequestException {
+        User userToUpdate;
+        try {
+            userToUpdate = findByEmail(user.getEmail());
+            userToUpdate.setUsername(user.getUsername());
+            userToUpdate.setNickname(user.getNickname());
+            userToUpdate.setEmail(user.getEmail());
+        } catch (NullPointerException ex) {
+            throw BadRequestException.createWith("JSON bad request or missing field.");
+        }
+
+        save(userToUpdate);
+        return userToUpdate;
     }
 
     @ExceptionAspect
