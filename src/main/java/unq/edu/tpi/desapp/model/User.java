@@ -5,8 +5,6 @@ import unq.edu.tpi.desapp.model.exceptions.BadEmailAddressException;
 import unq.edu.tpi.desapp.model.exceptions.IntegerMustBePositive;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class User {
     @Column(unique = true)
     private String email;
     @JsonIgnore
-    @Size(min = 3, max = 16, message = "Nickname must have between 3 and 16 letters")
+    @Size(min = 3, max = 16, message = "Password must have between 3 and 16 letters")
     private String password;
     @Size(min = 3, max = 16, message = "Nickname must have between 3 and 16 letters")
     private String nickname;

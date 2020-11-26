@@ -1,6 +1,8 @@
 package unq.edu.tpi.desapp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import unq.edu.tpi.desapp.aspects.ExceptionAspect;
@@ -46,19 +48,32 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User updateUser(User user) throws BadRequestException {
+    @ExceptionAspect
+    public User updateUser(User user) throws Exception {
         User userToUpdate;
-        try {
-            userToUpdate = findByEmail(user.getEmail());
-            userToUpdate.setUsername(user.getUsername());
-            userToUpdate.setNickname(user.getNickname());
-            userToUpdate.setEmail(user.getEmail());
-        } catch (NullPointerException ex) {
-            throw BadRequestException.createWith("JSON bad request or missing field.");
+        userToUpdate = findByEmail(user.getEmail());
+        if (userToUpdate == null){
+            throw BadRequestException.createWith("User not found");
         }
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setNickname(user.getNickname());
+        userToUpdate.setEmail(user.getEmail());
 
         save(userToUpdate);
         return userToUpdate;
+    }
+
+    public User createOrUpdate(User user) throws Exception {
+        User newUser;
+        try {
+            newUser = createUser(user);
+            ResponseEntity.status(HttpStatus.CREATED);
+        } catch (ElementAlreadyExists ex) {
+            newUser = updateUser(user);
+            ResponseEntity.status(HttpStatus.OK);
+        }
+
+        return newUser;
     }
 
     @ExceptionAspect
