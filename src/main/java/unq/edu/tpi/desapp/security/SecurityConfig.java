@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").permitAll()
 //                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").hasAuthority("SCOPE_write:projects")
 //                .mvcMatchers(HttpMethod.PUT, "/projects/*/state/*").authenticated()
+//                .mvcMatchers("/projects/*/ending").authenticated()
                 .mvcMatchers("/project_state").authenticated()
                 .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 .and().cors()

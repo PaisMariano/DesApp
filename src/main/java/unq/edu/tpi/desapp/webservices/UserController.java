@@ -44,10 +44,10 @@ public class UserController {
         return userService.createOrUpdate(user);
     }
 
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") Integer id) throws Exception {
-        return userService.findByID(id);
-    }
+//    @GetMapping("/users/{id}")
+//    public User getUser(@PathVariable("id") Integer id) throws Exception {
+//        return userService.findByID(id);
+//    }
 
     @GetMapping("/users/{email}")
     public User getUser(@PathVariable("email") String email) {
