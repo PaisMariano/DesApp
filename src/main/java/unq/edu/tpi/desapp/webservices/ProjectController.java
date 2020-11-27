@@ -12,6 +12,7 @@ import unq.edu.tpi.desapp.services.ProjectService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -56,14 +57,14 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
     }
 
-//    @PostMapping("/project_state")
-//    public ResponseEntity<String> updateProjectState(@RequestBody Map<String, Integer> json) throws ProjectNotFoundException {
-//
-//        Integer projectId = json.get("projectId");
-//        Integer stateId = json.get("stateId");
-//        projectService.updateProjectService(projectId, stateId);
-//        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
-//    }
+    @PostMapping("/project_state")
+    public ResponseEntity<String> updateProjectState(@RequestBody Map<String, Integer> json) throws ProjectNotFoundException {
+
+        Integer projectId = json.get("projectId");
+        Integer stateId = json.get("stateId");
+        projectService.updateProjectService(projectId, stateId);
+        return ResponseEntity.status(HttpStatus.OK).body("Resource updated successfully");
+    }
 
     @GetMapping("/projects/{id}/donors")
     public Collection<User> getDonors(@PathVariable("id") Integer id) throws ProjectNotFoundException {
